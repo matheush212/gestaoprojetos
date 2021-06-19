@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import './index.css';
 import Autenticacao from './React/Pages/Autenticacao/Autenticacao';
+import MeusProjetos from './React/Pages/MeusProjetos/MeusProjetos';
 
 import NotAuthenticated from './React/Pages/NotAuthenticated/NotAuthenticated';
 import NotFound from './React/Pages/NotFound/NotFound';
@@ -54,6 +55,7 @@ ReactDOM.render(
   <BrowserRouter>
     <Switch>
       <Route path='/' exact={true} component={Autenticacao} />
+      <PrivateRoute path="/MeusProjetos" component={MeusProjetos} />
       <Route path="/NotAuthenticated" component={NotAuthenticated} />
       <Route component={NotFound} />
     </Switch>

@@ -22,11 +22,11 @@ exports.Authorize = async () => {
         res = await res.json();
 
         let token = res.data[0].Token;
-        let idUser = res.data[0].IdUser;
+        let userID = res.data[0].UserID;
         if (token !== "" && token !== "null") {
             let data = jwt.verify(token, SALT_KEY);
 
-            if (data.id_user === parseInt(idUser))
+            if (data.id_user === parseInt(userID))
                 return true;
             else {
                 return false;
@@ -44,16 +44,16 @@ exports.Authorize = async () => {
 
 async function GetAccess() {
     try {
-        let idAccess = urlParam.queryString("Ref");
+        let accessID = urlParam.queryString("Ref");
 
-        if (idAccess === undefined)
+        if (accessID === undefined)
             return null;
 
         return await window.fetch('http://' + window.location.hostname + ':5000/api/sgp/get/profile', {
             method: 'POST',
             headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                "IdAcesso": idAccess,
+                "accessID": accessID,
             })
         });
     }

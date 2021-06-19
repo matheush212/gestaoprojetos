@@ -151,7 +151,6 @@ class UsuariosController {
 
     ControleUsuarioAtivo(idUsuario, status, res) {
         try {
-            console.log(idUsuario, status);
             let instaceUserDAO = new userDAO.UsuariosDAO();
             instaceUserDAO.ControleAtivo(idUsuario, status, res);
         }

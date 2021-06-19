@@ -4,11 +4,11 @@ const log = require('./log-control');
 
 async function GetRoutes(dirname, app) {
     try {
-        app.get("/api/agro/get/licenca/:token", (req, res, next) => {
+        app.get("/api/sgp/all/projects/:status/:token", (req, res, next) => {
             if (AuthControl(req.params.token, res)) {
-                let licencaController = require(dirname + '/client/src/Licenca/LicencaController');
-                let instaceLicencaController = new licencaController.LicencaController();
-                instaceLicencaController.VerificaSeExisteRegistroLicenca(res);
+                let controllerClass = require(dirname + '/client/src/Projetos/ProjetosController');
+                let instanceController = new controllerClass.ProjetosController();
+                instanceController.GetAllProjects(req.params.status, res);
             }
         });
     }
