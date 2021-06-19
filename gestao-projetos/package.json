@@ -1,0 +1,26 @@
+{
+  "name": "gestao-projetos",
+  "version": "1.0.0",
+  "scripts": {
+    "client": "cd client && npm start",
+    "server": "node server.js",
+    "sgp": "concurrently --kill-others-on-fail \"nodemon server.js -c -1\" \"npm run client\""
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "concurrently": "^6.2.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "ip": "^1.1.5",
+    "jspdf": "^2.3.1",
+    "nocache": "^3.0.0",
+    "node-fetch": "^2.6.1",
+    "nodemon": "^2.0.7",
+    "singleton-db": "file:../modules/singleton-db",
+    "uuid": "^8.3.2"
+  },
+  "sgpDependencies": {
+    "concurrently": "^6.2.0"
+  }
+}

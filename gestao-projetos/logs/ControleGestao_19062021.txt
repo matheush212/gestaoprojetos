@@ -1,0 +1,4 @@
+19/06/2021 15:45:13 -> Tela: UsuariosController - Função: GetAcessoLogin - Erro: user.Usuario is not a constructor
+
+19/06/2021 15:45:13 -> Tela: Autenticacao - Função: CheckSuccessLogin - Erro: Failed to fetch
+

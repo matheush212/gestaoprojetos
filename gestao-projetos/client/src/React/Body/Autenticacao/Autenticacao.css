@@ -1,0 +1,41 @@
+.autentication-position{ 
+    width: 30em; 
+    height: 20em; 
+    position: absolute; 
+    left: 50%; top: 8em; 
+    transform: translate(-50%, -50%); 
+    margin-top: 6% !important;
+}
+
+.button-login-style{
+    margin-top: 4% !important;
+    background-color: rgba(58, 56, 68, 0.87) !important;
+    color: white !important;
+}
+
+.button-login-style:hover{
+    background-color: rgba(58, 56, 68, 0.87) !important;
+    color: white !important;
+}
+
+.login-field-style{background-color: transparent !important;}
+
+.div-space-after-end{
+    width: 100% !important;
+    padding: 5em !important;
+    transition: all 0.15s !important;
+    border-radius: 10% !important;
+    text-decoration:none !important;
+    cursor: pointer !important;
+    font-weight: bold !important;
+    outline:none !important;
+    border-width: 2px !important;
+}
+
+@media only screen and (max-width: 2000px){.div-space-after-end{display: none !important; }}
+@media only screen and (max-width: 1370px){.autentication-position{width: 26em !important; height: 17em !important; } .visible-password-position, .visible-password-off-position{ margin-top: 8.5% !important;}}
+@media only screen and (max-width: 900px){.autentication-position{width: 23em !important; height: 15em !important;} .div-space-after-end{display: flex !important; } .visible-password-position, .visible-password-off-position{ margin-top: 10% !important;}}
+@media only screen and (max-width: 600px){.autentication-position{width: 20em !important; height: 15em !important; margin-top: 12% !important;} .visible-password-position, .visible-password-off-position{ margin-top: 11% !important;}}
+@media only screen and (max-width: 360px){.visible-password-position, .visible-password-off-position{ margin-top: 11.2% !important;}}
+@media only screen and (max-width: 330px){.autentication-position{width: 18em !important; height: 14em !important;} .visible-password-position, .visible-password-off-position{ margin-top: 12.2% !important;}}
+@media only screen and (max-width: 250px){.autentication-position{width: 16em !important; height: 12em !important; margin-top: 5% !important;}}
