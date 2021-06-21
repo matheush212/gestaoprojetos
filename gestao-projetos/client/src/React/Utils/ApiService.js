@@ -19,6 +19,7 @@ const ApiService = {
     GetUserProfile: (token) => ConsomeApi(true, `get/profile/${token}`, 'POST'),
     RemoveUserProfile: (token) => ConsomeApi(true, `remove/profile/${token}`, 'POST'),
     AllProjects: (status, token) => ConsomeApi(true, `all/projects/${status}/${token}`, 'GET'),
+    ProjectByID: (idProjeto, token) => ConsomeApi(true, `get/project/by/id/${idProjeto}/${token}`, 'GET'),
     TrataErros: res => {
         if (!res.ok) {
             throw Error(res.responseText)

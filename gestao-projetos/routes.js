@@ -11,6 +11,14 @@ async function GetRoutes(dirname, app) {
                 instanceController.GetAllProjects(req.params.status, res);
             }
         });
+
+        app.get("/api/sgp/get/project/by/id/:idProjeto/:token", (req, res, next) => {
+            if (AuthControl(req.params.token, res)) {
+                let controllerClass = require(dirname + '/client/src/Projetos/ProjetosController');
+                let instanceController = new controllerClass.ProjetosController();
+                instanceController.GetProjectByID(req.params.idProjeto, res);
+            }
+        });
     }
     catch (err) {
         log.LogError("routes", "GetRoutes", err.message);
@@ -45,6 +53,22 @@ async function PostRoutes(dirname, app) {
             let controllerClass = require(dirname + '/client/src/Usuarios/UsuariosController');
             let instanceController = new controllerClass.UsuariosController();
             instanceController.GetAcessoLogin(req.body.login, req.body.password, res);
+        });
+
+        app.post("/api/sgb/new/project", (req, res, next) => {
+            if (AuthControl(req.body.token, res)) {
+                let controllerClass = require(dirname + '/client/src/Projetos/ProjetosController');
+                let instanceController = new controllerClass.ProjetosController();
+                instanceController.CriaNovoProjeto(req.body.nome, req.body.descricao, req.body.dtInicio, req.body.dtFinal, req.body.dtCadastro, res);
+            }
+        });
+
+        app.post("/api/sgb/edit/project", (req, res, next) => {
+            if (AuthControl(req.body.token, res)) {
+                let controllerClass = require(dirname + '/client/src/Projetos/ProjetosController');
+                let instanceController = new controllerClass.ProjetosController();
+                instanceController.EditaProjeto(req.body.idProjeto, req.body.nome, req.body.descricao, req.body.dtInicio, req.body.dtFinal, req.body.finalizado, req.body.dtCadastro, res);
+            }
         });
     }
     catch (err) {

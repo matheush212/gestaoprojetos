@@ -4,14 +4,25 @@ const Log = require("../Functions/GeraLog");
 
 
 class ProjetosController {
-    CriaNovoProjeto(tipoUsuario, nome, login, senha, dtCadastro, res) {
+    CriaNovoProjeto(nome, descricao, dtInicio, dtFinal, dtCadastro, res) {
         try {
             let instaceDAO = new projetosDAO.ProjetosDAO();
-            let objModel = new projetos.Projetos("", tipoUsuario, nome, login, senha, dtCadastro, 1);
-            instaceDAO.CriaUsuario(objModel, res);
+            let objModel = new projetos.Projetos("", nome, descricao, dtInicio, dtFinal, 0, 0, 0, dtCadastro, 1);
+            instaceDAO.NewProject(objModel, res);
         }
         catch (err) {
             Log.LogError("ProjetosController", "CriaNovoProjeto", err.message);
+        }
+    }
+
+
+    GetProjectByID(idProjeto, res) {
+        try {
+            let instaceDAO = new projetosDAO.ProjetosDAO();
+            instaceDAO.SelectByID(idProjeto, res);
+        }
+        catch (err) {
+            Log.LogError("ProjetosController", "GetProjectByID", err.message);
         }
     }
 
@@ -56,6 +67,18 @@ class ProjetosController {
         }
         catch (err) {
             Log.LogError("ProjetosController", "ControleProjetoAtivo", err.message);
+        }
+    }
+
+
+    EditaProjeto(idProjeto, nome, descricao, dtInicio, dtFinal, finalizado, dtCadastro, res) {
+        try {
+            let instaceDAO = new projetosDAO.ProjetosDAO();
+            let objModel = new projetos.Projetos(idProjeto, nome, descricao, dtInicio, dtFinal, 0, 0, finalizado, dtCadastro, 1);
+            instaceDAO.EditProject(objModel, res);
+        }
+        catch (err) {
+            Log.LogError("ProjetosController", "EditaProjeto", err.message);
         }
     }
 }

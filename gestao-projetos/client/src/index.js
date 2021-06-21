@@ -4,6 +4,8 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import './index.css';
 import Autenticacao from './React/Pages/Autenticacao/Autenticacao';
 import MeusProjetos from './React/Pages/MeusProjetos/MeusProjetos';
+import NovoProjeto from './React/Pages/NovoProjeto/NovoProjeto';
+import VisualizaProjeto from './React/Pages/VisualizaProjeto/VisualizaProjeto';
 
 import NotAuthenticated from './React/Pages/NotAuthenticated/NotAuthenticated';
 import NotFound from './React/Pages/NotFound/NotFound';
@@ -56,6 +58,8 @@ ReactDOM.render(
     <Switch>
       <Route path='/' exact={true} component={Autenticacao} />
       <PrivateRoute path="/MeusProjetos" component={MeusProjetos} />
+      <PrivateRoute path="/NovoProjeto" component={NovoProjeto} />
+      <PrivateRoute path="/VisualizaProjeto" component={VisualizaProjeto} />
       <Route path="/NotAuthenticated" component={NotAuthenticated} />
       <Route component={NotFound} />
     </Switch>

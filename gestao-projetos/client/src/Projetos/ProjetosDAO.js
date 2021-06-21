@@ -5,32 +5,42 @@ const Log = require("../Functions/GeraLog");
 const ATIVO = 1;
 
 class ProjetosDAO {
-    CriaNovoProjeto(objUser, res) {
+    NewProject(obj, res) {
         try {
-            let sql = `INSERT INTO Projetos(TipoUsuario, Nome, Login, Email, Senha, DtCadastro, Ativo) VALUES 
-                       ('${objUser.tipoUsuario}', '${objUser.nome}', '${objUser.login}', '${objUser.email}', '${hash}', '${objUser.dtCadastro}', '${objUser.ativo}')`;
+            let sql = `INSERT INTO Projetos(Nome, Descricao, DtInicio, DtFinal, Porcentagem, Atrasado, Finalizado, DtCadastro, Ativo) VALUES 
+                       ('${obj.nome}', '${obj.descricao}', '${obj.dtInicio}', '${obj.dtFinal}', ${obj.porcentagem}, ${obj.atrasado}, ${obj.finalizado}, 
+                       '${obj.dtCadastro}', ${obj.ativo})`;
 
             instanceDB.run(sql, [], function (err) {
-                if (err) {
-                    if (err.errno == 19)
-                        res.json({ "status": 400, "message": "Este usuário ja existe! Por favor insira outro nome de usuário!" });
-                    else
-                        res.json({ "status": 400, "message": "Não foi possível cadastrar o usuário '" + objUser.login + "'!" });
-                }
-                else {
-                    res.json({ "status": 200, "message": "Usuário '" + objUser.login + "' cadastrado com sucesso!", });
-                }
+                if (err)
+                    res.json({ "status": 400, "message": "Não foi possível cadastrar o usuário '" + objUser.login + "'!" });
+                else
+                    res.json({ "status": 200, "message": "Projeto '" + obj.nome + "' cadastrado com sucesso!" });
             });
         }
         catch (err) {
-            Log.LogError("ProjetosDAO", "CriaNovoProjeto", err.message);
+            Log.LogError("ProjetosDAO", "NewProject", err.message);
+        }
+    }
+
+
+    SelectByID(idProjeto, res) {
+        try {
+            let sql = `SELECT * FROM Projetos WHERE Id = ${idProjeto} AND Ativo = 1`;
+
+            instanceDB.get(sql, [], (err, rows) => {
+                res.json(GetJSONDataSQL.ReturnDataJSON(err, rows, 'Projeto'));
+            });
+        }
+        catch (err) {
+            Log.LogError("ProjetosDAO", "SelectByID", err.message);
         }
     }
 
 
     SelectAll(status, res) {
         try {
-            let sql = `SELECT *, strftime('%d/%m/%Y', DtCadastro) as DataCadastro, strftime('%d/%m/%Y', DtInicio) as DataInicio, 
+            let sql = `SELECT *, substr(Nome, 0, 50) as NomeProjeto, strftime('%d/%m/%Y', DtCadastro) as DataCadastro, strftime('%d/%m/%Y', DtInicio) as DataInicio, 
                        strftime('%d/%m/%Y', DtFinal) as DataFinal
                        FROM Projetos WHERE Ativo = ${status} ORDER BY DtCadastro DESC`;
 
@@ -46,7 +56,7 @@ class ProjetosDAO {
 
     SelectByFilter(status, filtro, text, res) {
         try {
-            let sql = `SELECT *, strftime('%d/%m/%Y', DtCadastro) as DataCadastro, strftime('%d/%m/%Y', DtInicio) as DataInicio, 
+            let sql = `SELECT *, substr(Nome, 0, 40) as NomeProjeto, strftime('%d/%m/%Y', DtCadastro) as DataCadastro, strftime('%d/%m/%Y', DtInicio) as DataInicio, 
                        strftime('%d/%m/%Y', DtFinal) as DataFinal
                        FROM Projetos `;
 
@@ -74,7 +84,7 @@ class ProjetosDAO {
 
     SelectByDate(status, campo, dataDe, dataAte, res) {
         try {
-            let sql = `SELECT *, strftime('%d/%m/%Y', DtCadastro) as DataCadastro, strftime('%d/%m/%Y', DtInicio) as DataInicio, 
+            let sql = `SELECT *, substr(Nome, 0, 50) as NomeProjeto, strftime('%d/%m/%Y', DtCadastro) as DataCadastro, strftime('%d/%m/%Y', DtInicio) as DataInicio, 
                        strftime('%d/%m/%Y', DtFinal) as DataFinal
                        FROM Projetos 
                        WHERE DtCadastro >= '${dataDe}' AND DtCadastro <= '${dataAte}' AND Ativo = ${status} ORDER BY DtCadastro DESC`;
@@ -108,5 +118,24 @@ class ProjetosDAO {
             Log.LogError("ProjetosDAO", "ControleAtivo", err.message);
         }
     }
+
+
+    EditProject(obj, res) {
+        try {
+            let sql = `UPDATE Projetos SET Nome='${obj.nome}', Descricao='${obj.descricao}', DtInicio='${obj.dtInicio}', DtFinal='${obj.dtFinal}', Finalizado=${obj.finalizado},
+                       DtCadastro='${obj.dtCadastro}' WHERE Id=${obj.id}`;
+
+            instanceDB.run(sql, [], function (err) {
+                if (err)
+                    res.json({ "status": 400, "message": err.message });
+                else
+                    res.json({ "status": 200, "message": "Projeto editado com sucesso!" });
+            });
+        }
+        catch (err) {
+            Log.LogError("ProjetosDAO", "EditProject", err.message);
+        }
+    }
+
 }
 exports.ProjetosDAO = ProjetosDAO;

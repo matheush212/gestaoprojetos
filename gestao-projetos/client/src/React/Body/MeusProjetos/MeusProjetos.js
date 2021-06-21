@@ -14,8 +14,10 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import FiltrosPadrao from '../FiltrosPadrao/FiltrosPadrao';
 import UrlParm from '../../../Functions/GetUrlParameters';
 import Log from '../../../Functions/GeraLog';
 import $ from "jquery";
@@ -24,6 +26,8 @@ let message = "";
 let idProjeto = "";
 let tokenRef = UrlParm.queryString("Ref");
 const ATIVOS = 1;
+const STATUS_200 = 200;
+const STATUS_400 = 400;
 
 
 class MeusProjetos extends React.Component {
@@ -32,14 +36,15 @@ class MeusProjetos extends React.Component {
 
         this.state = {
             datasource: [],
-            openDialog: false
+            openProjectDialog: false,
+            openLogOutDialog: false,
+            anchorEl: null
         }
 
         PopUp.ExibeMensagem('info', "Filtre e selecione uma linha com o registro desejado!");
 
         columns = [
-            { id: "Id", label: 'Id', minWidth: 60, align: 'center' },
-            { id: "Nome", label: 'Nome', minWidth: 100, align: 'center' },
+            { id: "NomeProjeto", label: 'Nome', minWidth: 100, align: 'center' },
             { id: "DataInicio", label: 'Dt. Inicial', minWidth: 80, align: 'center' },
             { id: "DataFinal", label: 'Dt. Final', minWidth: 80, align: 'center' },
             { id: "Porcentagem", label: '% Completo', minWidth: 50, align: 'center' },
@@ -58,9 +63,8 @@ class MeusProjetos extends React.Component {
             let _this = this;
             $("#tbMeusProjetos").on("click", "tbody tr", function (event) {
                 $(this).addClass('selected-padrao').siblings().removeClass('selected-padrao');
-                idProjeto = $(this).find('td:eq(0)').html();
-                message = "O que você deseja fazer?:";
-                _this.setState({ openDialog: true });
+                message = `Você deseja visualizar o projeto '${$(this).find('td:eq(0)').html()}'?`;
+                _this.setState({ openProjectDialog: true });
             });
 
             this.GetAllProjects();
@@ -72,95 +76,80 @@ class MeusProjetos extends React.Component {
 
 
     GetAllProjects = () => {
-        try {
-            ApiService.AllProjects(ATIVOS, tokenRef)
-                .then(res => {
-                    this.setState({ openDialog: false });
+        ApiService.AllProjects(ATIVOS, tokenRef)
+            .then(res => {
+                this.setState({ openProjectDialog: false });
+                this.setState({ datasource: [] });
+                if (res.status === STATUS_200) {
+                    PopUp.ExibeMensagem('success', res.message);
+                    this.setState({ datasource: [...this.state.datasource, ...res.data] });
+                }
+                else if (res.status === STATUS_400) {
+                    PopUp.ExibeMensagem('info', res.message);
                     this.setState({ datasource: [] });
-                    if (res.status === 200) {
-                        PopUp.ExibeMensagem('success', res.message);
-                        this.setState({ datasource: [...this.state.datasource, ...res.data] });
-                    }
-                    else if (res.status === 400) {
-                        PopUp.ExibeMensagem('info', res.message);
-                        this.setState({ datasource: [] });
-                    }
-                    else {
-                        PopUp.ExibeMensagem('error', "Não foi possível carregar os clientes");
-                        Log.LogError("MeusProjetos", "GetAllProjects", res.message);
-                        this.setState({ datasource: [] });
-                    }
-                })
-                .catch(err => {
-                    PopUp.ExibeMensagem('error', 'Falha na comunicação com a API ao listar os Clientes');
-                    Log.LogError("MeusProjetos", "GetAllProjects", err.message);
-                });
-        }
-        catch (err) {
-            console.log(err.message);
-        }
+                }
+                else {
+                    PopUp.ExibeMensagem('error', "Não foi possível carregar os clientes");
+                    Log.LogError("MeusProjetos", "GetAllProjects", res.message);
+                    this.setState({ datasource: [] });
+                }
+            })
+            .catch(err => {
+                PopUp.ExibeMensagem('error', 'Falha na comunicação com a API ao listar os Clientes');
+                Log.LogError("MeusProjetos", "GetAllProjects", err.message);
+            });
     }
 
 
     GetProjectsByDate = (dataDe, dataAte) => {
-        try {
-            ApiService.ProjectsByDate(ATIVOS, dataDe, dataAte, tokenRef)
-                .then(res => {
-                    this.setState({ openDialog: false });
+        ApiService.ProjectsByDate(ATIVOS, dataDe, dataAte, tokenRef)
+            .then(res => {
+                this.setState({ openProjectDialog: false });
+                this.setState({ datasource: [] });
+                if (res.status === STATUS_200) {
+                    PopUp.ExibeMensagem('success', res.message);
+                    this.setState({ datasource: [...this.state.datasource, ...res.data] });
+                }
+                else if (res.status === STATUS_400) {
+                    PopUp.ExibeMensagem('info', res.message);
                     this.setState({ datasource: [] });
-                    if (res.status === 200) {
-                        PopUp.ExibeMensagem('success', res.message);
-                        this.setState({ datasource: [...this.state.datasource, ...res.data] });
-                    }
-                    else if (res.status === 400) {
-                        PopUp.ExibeMensagem('info', res.message);
-                        this.setState({ datasource: [] });
-                    }
-                    else {
-                        PopUp.ExibeMensagem('error', "Não foi possível carregar os clientes");
-                        Log.LogError("MeusProjetos", "GetProjectsByDate", res.message);
-                        this.setState({ datasource: [] });
-                    }
-                })
-                .catch(err => {
-                    PopUp.ExibeMensagem('error', 'Falha na comunicação com a API ao listar os Clientes');
-                    Log.LogError("MeusProjetos", "GetProjectsByDate", err.message);
-                });
-        }
-        catch (err) {
-            console.log(err.message);
-        }
+                }
+                else {
+                    PopUp.ExibeMensagem('error', "Não foi possível carregar os clientes");
+                    Log.LogError("MeusProjetos", "GetProjectsByDate", res.message);
+                    this.setState({ datasource: [] });
+                }
+            })
+            .catch(err => {
+                PopUp.ExibeMensagem('error', 'Falha na comunicação com a API ao listar os Clientes');
+                Log.LogError("MeusProjetos", "GetProjectsByDate", err.message);
+            });
     }
 
 
     GetProjectsByFilter = (filtroSelecionado, textFilter) => {
-        try {
-            ApiService.ProjectsByFilter(ATIVOS, filtroSelecionado, textFilter, tokenRef)
-                .then(res => {
-                    this.setState({ openDialog: false });
+        ApiService.ProjectsByFilter(ATIVOS, filtroSelecionado, textFilter, tokenRef)
+            .then(res => {
+                this.setState({ openProjectDialog: false });
+                this.setState({ datasource: [] });
+                if (res.status === STATUS_200) {
+                    PopUp.ExibeMensagem('success', res.message);
+                    this.setState({ datasource: [...this.state.datasource, ...res.data] });
+                }
+                else if (res.status === STATUS_400) {
+                    PopUp.ExibeMensagem('info', res.message);
                     this.setState({ datasource: [] });
-                    if (res.status === 200) {
-                        PopUp.ExibeMensagem('success', res.message);
-                        this.setState({ datasource: [...this.state.datasource, ...res.data] });
-                    }
-                    else if (res.status === 400) {
-                        PopUp.ExibeMensagem('info', res.message);
-                        this.setState({ datasource: [] });
-                    }
-                    else {
-                        PopUp.ExibeMensagem('error', "Não foi possível carregar os clientes");
-                        Log.LogError("MeusProjetos", "GetProjectsByFilter", res.message);
-                        this.setState({ datasource: [] });
-                    }
-                })
-                .catch(err => {
-                    PopUp.ExibeMensagem('error', 'Falha na comunicação com a API ao listar os Clientes');
-                    Log.LogError("MeusProjetos", "GettProjectsByFilter", err.message);
-                });
-        }
-        catch (err) {
-            console.log(err.message);
-        }
+                }
+                else {
+                    PopUp.ExibeMensagem('error', "Não foi possível carregar os clientes");
+                    Log.LogError("MeusProjetos", "GetProjectsByFilter", res.message);
+                    this.setState({ datasource: [] });
+                }
+            })
+            .catch(err => {
+                PopUp.ExibeMensagem('error', 'Falha na comunicação com a API ao listar os Clientes');
+                Log.LogError("MeusProjetos", "GettProjectsByFilter", err.message);
+            });
     }
 
 
@@ -179,32 +168,105 @@ class MeusProjetos extends React.Component {
     }
 
 
-    DialogClose = () => {
-        this.setState({ openDialog: false });
+    GetIdProjeto = (id) => {
+        idProjeto = id;
     }
 
 
-    VizualizaProjeto = () => {
-        this.setState({ openDialog: false });
+    CloseProjectDialog = () => {
+        this.setState({ openProjectDialog: false });
     }
 
 
-    EditaProjeto = () => {
-        this.setState({ openDialog: false });
+    VizualizeProjectDialog = () => {
+        this.setState({ openProjectDialog: false });
+        window.location.href = "VisualizaProjeto?Ref=" + tokenRef + "&IdProjeto=" + idProjeto;
+    }
+
+
+    LogOut = () => {
+        this.setState({ openLogOutDialog: true });
+    }
+
+
+    CloseLogOutDialog = () => {
+        this.setState({ openLogOutDialog: false });
+    }
+
+
+    ConfirmLogOutDialog = () => {
+        this.setState({ openLogOutDialog: false });
+        this.DestroySession();
+    }
+
+
+    OpenMenuBar = (event) => {
+        this.setState({ anchorEl: event.currentTarget });
+    }
+
+
+    CloseMenuBar = (action) => {
+        this.setState({ anchorEl: null });
+
+        if (action === "LogOut")
+            this.setState({ openLogOutDialog: true });
+    }
+
+
+    NovoProjeto = () => {
+        window.location.href = "NovoProjeto?Ref=" + tokenRef;
+    }
+
+
+    DestroySession = () => {
+        ApiService.RemoveUserProfile(tokenRef)
+            .then(res => {
+                if (res.status === STATUS_200)
+                    window.location.href = "/";
+                else {
+                    PopUp.ExibeMensagem('error', res.message);
+                    Log.LogError("MeusProjetos", "DestroySession", res.message);
+                }
+            })
+            .catch(err => {
+                PopUp.ExibeMensagem('error', "Não foi possível comunicar com a API");
+                Log.LogError("MeusProjetos", "DestroySession", err.message);
+            });
     }
 
 
     render() {
         return (
             <div className="body-table-projetos">
+                <div className="menu-superior">
+                    <AddCircleTwoToneIcon className="icons-menu" color="primary" onClick={this.NovoProjeto} />
+                    <Button className="buttons-menu" onClick={this.NovoProjeto}>Novo Projeto</Button>
+                    <Button className="buttons-menu" style={{ marginLeft: '0.5%' }}>Projetos</Button>
+                    <Button className="buttons-menu" style={{ marginLeft: '0.5%' }}>Filtros</Button>
+                    <div className="box-perfil" aria-controls="simple-menu" aria-haspopup="true" onMouseOver={this.OpenMenuBar}>E</div>
+                    <Menu id="simple-menu" anchorEl={this.state.anchorEl} keepMounted open={Boolean(this.state.anchorEl)} onClose={this.CloseMenuBar}>
+                        <div className="user-info">Euax</div>
+                        <MenuItem onClick={() => this.CloseMenuBar("Perfil")}>Perfil</MenuItem>
+                        <MenuItem onClick={() => this.CloseMenuBar("TrocaSenha")}>Trocar Senha</MenuItem>
+                        <MenuItem onClick={() => this.CloseMenuBar("LogOut")}>Sair</MenuItem>
+                    </Menu>
+                </div>
                 <div className="table-projetos">
-                    <Dialog open={this.state.openDialog} onClose={this.DialogClose} aria-labelledby="draggable-dialog-title">
+                    <Dialog open={this.state.openProjectDialog} onClose={this.CloseProjectDialog} aria-labelledby="draggable-dialog-title">
                         <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">Confirmação!</DialogTitle>
                         <DialogContent> <DialogContentText>{message}</DialogContentText> </DialogContent>
                         <DialogActions>
-                            <Button className="dialog-padrao" onClick={this.VizualizaProjeto}>Visualizar</Button>
-                            <Button className="dialog-padrao" onClick={this.EditaProjeto}>Editar</Button>
-                            <Button className="dialog-padrao" onClick={this.DialogClose}>Fechar</Button>
+                            <Button className="dialog-padrao" onClick={this.VizualizeProjectDialog}>Sim</Button>
+                            <Button className="dialog-padrao" onClick={this.CloseProjectDialog}>Não</Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <Dialog open={this.state.openLogOutDialog} onClose={this.CloseLogOutDialog} aria-labelledby="draggable-dialog-title">
+                        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">Confirmação!</DialogTitle>
+                        <DialogContent> <DialogContentText>Deseja deslogar do sistema?</DialogContentText> </DialogContent>
+                        <DialogActions>
+                            <Button className="dialog-padrao" onClick={this.ConfirmLogOutDialog}>Sim</Button>
+                            <Button className="dialog-padrao" onClick={this.CloseLogOutDialog}>Não</Button>
                         </DialogActions>
                     </Dialog>
                     <Paper>
@@ -221,8 +283,8 @@ class MeusProjetos extends React.Component {
                                             <TableRow hover role="checkbox" tabIndex={-1} key={index}>{columns.map((column) => {
                                                 const value = row[column.id];
                                                 return (
-                                                    <TableCell key={column.id} align={column.align}>
-                                                        {value}
+                                                    <TableCell key={column.id} align={column.align} onClick={() => this.GetIdProjeto(row.Id)}>
+                                                        {column.id === "Porcentagem" ? value : value === 1 ? ("Sim") : value === 0 ? ("Não") : value}
                                                     </TableCell>
                                                 )
                                             })}
@@ -234,6 +296,7 @@ class MeusProjetos extends React.Component {
                         </TableContainer>
                     </Paper>
                 </div>
+                <Button className="btn-sair" onClick={this.LogOut}>Sair</Button>
                 <div id="div-after-end"></div>
             </div>
         )

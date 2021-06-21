@@ -1,13 +1,61 @@
 .body-table-projetos{
     width: 100%;
     height: 90vh;
+    display:inline-block;
+}
+
+
+.menu-superior{
+    width: 100%;
+}
+
+
+.icons-menu{
+    margin-left: 0.6em !important;
+    margin-top: 0.2em;
+    float: left !important;
+    cursor: pointer;
+    color: rgb(25, 75, 27) !important;
+}
+
+
+.buttons-menu{
+    float: left !important;
+    text-transform: capitalize !important;
+    font-weight: bold !important;
+}
+
+
+.box-perfil{
+    float: right !important;
+    width: 45px;
+    height: 45px;
+    margin-right: 0.7em !important;
+    border-radius: 50%;
+    background-color: #50526356;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(60, 58, 78);
+    text-align: center !important;
+    font-weight: bold;
+    font-size: x-large;
+    font-style: italic;
+}
+
+
+.user-info{
+    width: 100%;
+    border-bottom-style: solid;
+    height: 2.2em !important;
+    text-align: center;
+    font-weight: bold;
 }
 
 
 .table-projetos{
     float: left;
     position: relative;
-    margin-top: 1em !important;
+    margin-top: 0.3em !important;
     margin-left: 0.6em !important;
     width: 99% !important;
 }
@@ -61,6 +109,29 @@ tbody tr:nth-child(odd){
     background-color: rgb(202, 202, 202);
     color: #fff;
 }
+
+
+.btn-sair{
+    margin-top: 1.6em !important;
+    margin-right: 0.8em !important;
+    float: right;
+    width: 8.3em !important;
+    padding: 0.7em !important;
+    border:0.1em solid rgb(60, 58, 78) !important;
+    color:rgb(60, 58, 78) !important;
+    text-shadow: 0 0.04em 0.04em rgb(60, 58, 78) !important;
+    text-align:center !important;
+    transition: all 0.15s !important;
+    background-color:#4e516642 !important;
+    border-radius: 5% !important;
+    text-decoration:none !important;
+    cursor: pointer !important;
+    outline:none !important;
+    border-width: 2px !important;
+    font-weight: bold !important;
+    font-size: 83% !important;
+}
+.btn-sair:hover{ color:rgb(82, 82, 82) !important; border-color:rgb(70, 70, 70) !important; }
 
 
 @media only screen and (max-width: 1600px){.table-projetos-container{max-height: 35em !important;}}

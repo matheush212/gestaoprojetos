@@ -50,6 +50,75 @@ body {
   cursor: pointer;
 }
 
+.inputs-padrao{
+  width: 100%;
+  padding: 12px;
+  border-radius: 4px;
+  resize: vertical;
+  text-align-last: center;
+}
+
+.half-inputs-padrao{
+  width: 45%;
+  float: left;
+  padding: 12px;
+  border-radius: 4px;
+  resize: vertical;
+  text-align-last: center;
+}
+
+.half-inputs-padrao::placeholder{color: rgba(59, 59, 59, 0.664);}
+.inputs-padrao::placeholder{color: rgba(59, 59, 59, 0.664);}
+
+.button-style-padrao {
+  background-color: rgb(60, 58, 78, 0.842) !important;
+  color: white !important;
+  width: 100% !important;
+  padding: 10px !important;
+  border: none !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  float: right !important;
+}
+
+.button-style-padrao:hover { background-color: #535353 !important; }
+  
+.div-assist-padrao {
+  float: left;
+  width: 13%;
+  margin-top: 6px;
+}
+
+.div-inputs-padrao {
+  float: left;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.row:after { content: ""; display: table; clear: both; }
+
+.btn-padrao{
+  margin-top: 1.6em !important;
+  margin-right: 1.2em !important;
+  float: right;
+  width: 8.3em !important;
+  padding: 0.7em !important;
+  border:0.1em solid rgb(60, 58, 78) !important;
+  color:rgb(60, 58, 78) !important;
+  text-shadow: 0 0.04em 0.04em rgb(60, 58, 78) !important;
+  text-align:center !important;
+  transition: all 0.15s !important;
+  background-color:#4e516642 !important;
+  border-radius: 5% !important;
+  text-decoration:none !important;
+  cursor: pointer !important;
+  outline:none !important;
+  border-width: 2px !important;
+  font-weight: bold !important;
+  font-size: 83% !important;
+}
+.btn-padrao:hover{ color:rgb(82, 82, 82) !important; border-color:rgb(70, 70, 70) !important; }
+
 @media only screen and (max-width: 2000px){#div-after-end{display: none !important; }}
 @media only screen and (max-width: 900px){#div-after-end{display: flex !important; }}
 

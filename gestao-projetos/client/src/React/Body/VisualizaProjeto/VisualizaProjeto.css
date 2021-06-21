@@ -1,0 +1,27 @@
+#divProgressProducao {
+    float: left;
+    width: 45%;
+    margin-top: 2%;
+    background-color: rgb(150, 150, 150);
+    text-align: center;
+}
+  
+#barProgressLine {
+    width: 1%;
+    height: 30px;
+    font-weight: bold;
+    padding-top: 0.2em;
+    font-size: 90%;
+    background-color: green;
+}
+
+.textarea-projeto-edit{
+    width: 45%; 
+    float: left;
+    margin-top: 2% !important;
+    resize: none !important; 
+    outline: none !important; 
+    height: 130px !important; 
+    text-align-last: center !important;
+}
+.textarea-projeto-edit::placeholder{color: rgba(59, 59, 59, 0.664);}

@@ -1,0 +1,9 @@
+.textarea-projeto{
+    width: 100%; 
+    margin-top: 2% !important;
+    resize: none !important; 
+    outline: none !important; 
+    height: 180px !important; 
+    text-align-last: center !important;
+}
+.textarea-projeto::placeholder{color: rgba(59, 59, 59, 0.664);}
