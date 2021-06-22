@@ -44,7 +44,7 @@ class MeusProjetos extends React.Component {
         PopUp.ExibeMensagem('info', "Filtre e selecione uma linha com o registro desejado!");
 
         columns = [
-            { id: "NomeProjeto", label: 'Nome', minWidth: 100, align: 'center' },
+            { id: "NomeProjeto", label: 'Nome', minWidth: 80, align: 'center' },
             { id: "DataInicio", label: 'Dt. Inicial', minWidth: 80, align: 'center' },
             { id: "DataFinal", label: 'Dt. Final', minWidth: 80, align: 'center' },
             { id: "Porcentagem", label: '% Completo', minWidth: 50, align: 'center' },
@@ -80,22 +80,20 @@ class MeusProjetos extends React.Component {
             .then(res => {
                 this.setState({ openProjectDialog: false });
                 this.setState({ datasource: [] });
-                if (res.status === STATUS_200) {
-                    PopUp.ExibeMensagem('success', res.message);
+                if (res.status === STATUS_200)
                     this.setState({ datasource: [...this.state.datasource, ...res.data] });
-                }
                 else if (res.status === STATUS_400) {
                     PopUp.ExibeMensagem('info', res.message);
                     this.setState({ datasource: [] });
                 }
                 else {
-                    PopUp.ExibeMensagem('error', "Não foi possível carregar os clientes");
+                    PopUp.ExibeMensagem('error', "Não foi possível carregar os projetos");
                     Log.LogError("MeusProjetos", "GetAllProjects", res.message);
                     this.setState({ datasource: [] });
                 }
             })
             .catch(err => {
-                PopUp.ExibeMensagem('error', 'Falha na comunicação com a API ao listar os Clientes');
+                PopUp.ExibeMensagem('error', 'Falha na comunicação com a API ao listar os projetos');
                 Log.LogError("MeusProjetos", "GetAllProjects", err.message);
             });
     }
@@ -115,13 +113,13 @@ class MeusProjetos extends React.Component {
                     this.setState({ datasource: [] });
                 }
                 else {
-                    PopUp.ExibeMensagem('error', "Não foi possível carregar os clientes");
+                    PopUp.ExibeMensagem('error', "Não foi possível carregar os projetos");
                     Log.LogError("MeusProjetos", "GetProjectsByDate", res.message);
                     this.setState({ datasource: [] });
                 }
             })
             .catch(err => {
-                PopUp.ExibeMensagem('error', 'Falha na comunicação com a API ao listar os Clientes');
+                PopUp.ExibeMensagem('error', 'Falha na comunicação com a API ao listar os projetos');
                 Log.LogError("MeusProjetos", "GetProjectsByDate", err.message);
             });
     }
@@ -141,13 +139,13 @@ class MeusProjetos extends React.Component {
                     this.setState({ datasource: [] });
                 }
                 else {
-                    PopUp.ExibeMensagem('error', "Não foi possível carregar os clientes");
+                    PopUp.ExibeMensagem('error', "Não foi possível carregar os projetos");
                     Log.LogError("MeusProjetos", "GetProjectsByFilter", res.message);
                     this.setState({ datasource: [] });
                 }
             })
             .catch(err => {
-                PopUp.ExibeMensagem('error', 'Falha na comunicação com a API ao listar os Clientes');
+                PopUp.ExibeMensagem('error', 'Falha na comunicação com a API ao listar os projetos');
                 Log.LogError("MeusProjetos", "GettProjectsByFilter", err.message);
             });
     }
@@ -163,7 +161,7 @@ class MeusProjetos extends React.Component {
                 this.GetProjectsByFilter(filtroSelecionado, textFilter);
         }
         catch (err) {
-            Log.LogError("MeusProjetos", "FilterChangeClientes", err.message);
+            Log.LogError("MeusProjetos", "FilterChangeProjects", err.message);
         }
     }
 
@@ -251,7 +249,7 @@ class MeusProjetos extends React.Component {
                         <MenuItem onClick={() => this.CloseMenuBar("LogOut")}>Sair</MenuItem>
                     </Menu>
                 </div>
-                <div className="table-projetos">
+                <div className="table-padrao">
                     <Dialog open={this.state.openProjectDialog} onClose={this.CloseProjectDialog} aria-labelledby="draggable-dialog-title">
                         <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">Confirmação!</DialogTitle>
                         <DialogContent> <DialogContentText>{message}</DialogContentText> </DialogContent>
@@ -270,7 +268,7 @@ class MeusProjetos extends React.Component {
                         </DialogActions>
                     </Dialog>
                     <Paper>
-                        <TableContainer className="table-projetos-container">
+                        <TableContainer className="table-padrao-container">
                             <Table id="tbMeusProjetos">
                                 <TableHead>
                                     <TableRow>
@@ -284,7 +282,11 @@ class MeusProjetos extends React.Component {
                                                 const value = row[column.id];
                                                 return (
                                                     <TableCell key={column.id} align={column.align} onClick={() => this.GetIdProjeto(row.Id)}>
-                                                        {column.id === "Porcentagem" ? value : value === 1 ? ("Sim") : value === 0 ? ("Não") : value}
+                                                        {column.id === "NomeProjeto" && String(value).length >= 39 ? String(value) + "..." :
+                                                            column.id === "Porcentagem" ? <div id="divProjectProgress"><div id="ProjectProgressLine" style={{ width: value + "%" }}>{value + "%"}</div></div> :
+                                                                value === 1 ? ("Sim") :
+                                                                    value === 0 ? ("Não") :
+                                                                        value}
                                                     </TableCell>
                                                 )
                                             })}

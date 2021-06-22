@@ -58,7 +58,7 @@ class VisualizaProjeto extends React.Component {
 
     PreencheDadosProjeto = (dados) => {
         document.getElementById("NomeProjetoEdit").value = dados.Nome;
-        document.getElementById("DescProjetoEdit").value = "Descrição: \n\n" + dados.Descricao;
+        document.getElementById("DescProjetoEdit").value = dados.Descricao;
         document.getElementById("DtInicioProjetoEdit").value = dados.DtInicio;
         document.getElementById("DtFinalProjetoEdit").value = dados.DtFinal;
         document.getElementById("DtCadastroEdit").value = dados.DtCadastro;
@@ -174,7 +174,7 @@ class VisualizaProjeto extends React.Component {
 
 
     VisualizaAtividades = () => {
-        window.location.href = "Atividades?Ref=" + tokenRef + "&IdProjeto=" + idProjeto;
+        window.location.href = "MinhasAtividades?Ref=" + tokenRef + "&IdProjeto=" + idProjeto;
     }
 
 

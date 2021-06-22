@@ -6,6 +6,7 @@ import Autenticacao from './React/Pages/Autenticacao/Autenticacao';
 import MeusProjetos from './React/Pages/MeusProjetos/MeusProjetos';
 import NovoProjeto from './React/Pages/NovoProjeto/NovoProjeto';
 import VisualizaProjeto from './React/Pages/VisualizaProjeto/VisualizaProjeto';
+import MinhasAtividades from './React/Pages/MinhasAtividades/MinhasAtividades';
 
 import NotAuthenticated from './React/Pages/NotAuthenticated/NotAuthenticated';
 import NotFound from './React/Pages/NotFound/NotFound';
@@ -60,6 +61,7 @@ ReactDOM.render(
       <PrivateRoute path="/MeusProjetos" component={MeusProjetos} />
       <PrivateRoute path="/NovoProjeto" component={NovoProjeto} />
       <PrivateRoute path="/VisualizaProjeto" component={VisualizaProjeto} />
+      <PrivateRoute path="/MinhasAtividades" component={MinhasAtividades} />
       <Route path="/NotAuthenticated" component={NotAuthenticated} />
       <Route component={NotFound} />
     </Switch>

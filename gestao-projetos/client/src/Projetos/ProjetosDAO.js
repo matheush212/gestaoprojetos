@@ -13,7 +13,7 @@ class ProjetosDAO {
 
             instanceDB.run(sql, [], function (err) {
                 if (err)
-                    res.json({ "status": 400, "message": "Não foi possível cadastrar o usuário '" + objUser.login + "'!" });
+                    res.json({ "status": 400, "message": "Não foi possível cadastrar o projeto '" + objUser.nome + "'!" });
                 else
                     res.json({ "status": 200, "message": "Projeto '" + obj.nome + "' cadastrado com sucesso!" });
             });
@@ -40,7 +40,7 @@ class ProjetosDAO {
 
     SelectAll(status, res) {
         try {
-            let sql = `SELECT *, substr(Nome, 0, 50) as NomeProjeto, strftime('%d/%m/%Y', DtCadastro) as DataCadastro, strftime('%d/%m/%Y', DtInicio) as DataInicio, 
+            let sql = `SELECT *, substr(Nome, 0, 40) as NomeProjeto, strftime('%d/%m/%Y', DtCadastro) as DataCadastro, strftime('%d/%m/%Y', DtInicio) as DataInicio, 
                        strftime('%d/%m/%Y', DtFinal) as DataFinal
                        FROM Projetos WHERE Ativo = ${status} ORDER BY DtCadastro DESC`;
 
@@ -84,7 +84,7 @@ class ProjetosDAO {
 
     SelectByDate(status, campo, dataDe, dataAte, res) {
         try {
-            let sql = `SELECT *, substr(Nome, 0, 50) as NomeProjeto, strftime('%d/%m/%Y', DtCadastro) as DataCadastro, strftime('%d/%m/%Y', DtInicio) as DataInicio, 
+            let sql = `SELECT *, substr(Nome, 0, 40) as NomeProjeto, strftime('%d/%m/%Y', DtCadastro) as DataCadastro, strftime('%d/%m/%Y', DtInicio) as DataInicio, 
                        strftime('%d/%m/%Y', DtFinal) as DataFinal
                        FROM Projetos 
                        WHERE DtCadastro >= '${dataDe}' AND DtCadastro <= '${dataAte}' AND Ativo = ${status} ORDER BY DtCadastro DESC`;

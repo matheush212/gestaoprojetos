@@ -114,7 +114,7 @@ class NovoProjeto extends React.Component {
     GetDadosProjeto = () => {
         try {
             nome = document.getElementById("NomeProjeto").value;
-            descricao = document.getElementById("DescProjeto").value;
+            descricao = "Descrição: \n\n" + document.getElementById("DescProjeto").value;
             dtInicio = document.getElementById("DtInicioProjeto").value;
             dtFinal = document.getElementById("DtFinalProjeto").value;
         }

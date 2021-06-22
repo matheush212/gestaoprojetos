@@ -138,3 +138,27 @@
 
 21/06/2021 17:39:56 -> Tela: VisualizaProjeto - Função: GetProjectByID - Erro: Autorização negada!
 
+21/06/2021 19:50:44 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+21/06/2021 19:50:45 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+21/06/2021 19:50:45 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+21/06/2021 20:00:10 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+21/06/2021 20:17:15 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+21/06/2021 20:17:49 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+21/06/2021 20:17:49 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+21/06/2021 20:18:03 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+21/06/2021 20:18:06 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+21/06/2021 20:19:53 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+21/06/2021 20:19:55 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+21/06/2021 20:19:55 -> Tela: MeusProjetos - Função: DestroySession - Erro: Não foi possível remover o profile!
+

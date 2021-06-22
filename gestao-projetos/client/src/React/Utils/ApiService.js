@@ -20,6 +20,8 @@ const ApiService = {
     RemoveUserProfile: (token) => ConsomeApi(true, `remove/profile/${token}`, 'POST'),
     AllProjects: (status, token) => ConsomeApi(true, `all/projects/${status}/${token}`, 'GET'),
     ProjectByID: (idProjeto, token) => ConsomeApi(true, `get/project/by/id/${idProjeto}/${token}`, 'GET'),
+    AllActivities: (status, token) => ConsomeApi(true, `all/activities/${status}/${token}`, 'GET'),
+    ActivityByID: (idAtividade, token) => ConsomeApi(true, `get/activity/by/id/${idAtividade}/${token}`, 'GET'),
     TrataErros: res => {
         if (!res.ok) {
             throw Error(res.responseText)

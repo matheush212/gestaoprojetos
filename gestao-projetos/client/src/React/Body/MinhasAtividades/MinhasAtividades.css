@@ -1,0 +1,44 @@
+.body-table-atividades{
+    width: 100%;
+    height: 86vh;
+    display:inline-block;
+}
+
+
+.btn-voltar-atividades{
+    margin-top: 1.6em !important;
+    margin-right: 0.8em !important;
+    float: right;
+    width: 8.3em !important;
+    padding: 0.7em !important;
+    border:0.1em solid rgb(60, 58, 78) !important;
+    color:rgb(60, 58, 78) !important;
+    text-shadow: 0 0.04em 0.04em rgb(60, 58, 78) !important;
+    text-align:center !important;
+    transition: all 0.15s !important;
+    background-color:#4e516642 !important;
+    border-radius: 5% !important;
+    text-decoration:none !important;
+    cursor: pointer !important;
+    outline:none !important;
+    border-width: 2px !important;
+    font-weight: bold !important;
+    font-size: 83% !important;
+}
+.btn-voltar-atividades:hover{ color:rgb(82, 82, 82) !important; border-color:rgb(70, 70, 70) !important; }
+
+
+#divActivityProgress {
+    width: 100%;
+    background-color: rgb(150, 150, 150);
+    text-align: center;
+}
+
+
+#ActivityProgressLine {
+    width: 1%;
+    height: 20px;
+    font-weight: bold;
+    font-size: 90%;
+    background-color: green;
+}

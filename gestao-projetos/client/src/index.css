@@ -79,6 +79,7 @@ body {
   border-radius: 4px !important;
   cursor: pointer !important;
   float: right !important;
+  margin-top: 5% !important;
 }
 
 .button-style-padrao:hover { background-color: #535353 !important; }
@@ -123,3 +124,68 @@ body {
 @media only screen and (max-width: 900px){#div-after-end{display: flex !important; }}
 
 code { font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace; }
+
+
+.table-padrao{
+  float: left;
+  position: relative;
+  margin-top: 0.3em !important;
+  margin-left: 0.6em !important;
+  width: 98.7% !important;
+}
+
+
+.table-padrao-container{
+  max-height: 45em !important;
+  border-style: 'Solid' !important;
+  border-radius: 5px !important;
+  margin-top: 10px !important;
+}
+
+
+tr {
+  height: 35px !important;
+  background-color: rgba(206, 206, 206, 0.795);
+}
+
+
+th {
+  font-size: 100% !important;
+  font-weight: bold !important;
+  max-width: 125px;
+  min-width: 125px;
+  padding: 0 !important;          
+  overflow-x: auto;
+  white-space: nowrap;
+  text-align: center !important;
+  background-color: rgb(60, 58, 78) !important;
+  color: whitesmoke !important;
+  border-style: solid !important;
+  border-width: 1px !important;
+  border-color: rgb(60, 58, 78) !important;
+}
+
+
+td {
+  font-size: 100% !important;
+  font-weight: bolder !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
+  padding: 0 !important;
+  text-align: center !important;
+  border-color: rgba(207, 207, 207, 0.527) !important;
+  border-style: solid !important;
+  border-width: 1px !important;
+  cursor: pointer !important;
+}
+
+
+tbody tr:nth-child(odd){
+  background-color: rgb(202, 202, 202);
+  color: #fff;
+}
+
+
+@media only screen and (max-width: 1600px){.table-padrao-container{max-height: 35em !important;}}
+@media only screen and (max-width: 1400px){.table-padrao-container{max-height: 45em !important;}}
+@media only screen and (max-width: 1366px){.table-padrao-container{max-height: 25.8em !important;}}
+@media only screen and (width: 1280px) and (height: 800px){.table-padrao-container{max-height: 30em !important;}}
