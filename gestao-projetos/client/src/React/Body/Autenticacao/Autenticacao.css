@@ -7,18 +7,24 @@
     margin-top: 6% !important;
 }
 
+
 .button-login-style{
     margin-top: 4% !important;
     background-color: rgba(58, 56, 68, 0.87) !important;
     color: white !important;
 }
 
+
 .button-login-style:hover{
     background-color: rgba(58, 56, 68, 0.87) !important;
     color: white !important;
 }
 
-.login-field-style{background-color: transparent !important;}
+
+.login-field-style{
+    background-color: transparent !important;
+}
+
 
 .div-space-after-end{
     width: 100% !important;
@@ -31,6 +37,7 @@
     outline:none !important;
     border-width: 2px !important;
 }
+
 
 @media only screen and (max-width: 2000px){.div-space-after-end{display: none !important; }}
 @media only screen and (max-width: 1370px){.autentication-position{width: 26em !important; height: 17em !important; } .visible-password-position, .visible-password-off-position{ margin-top: 8.5% !important;}}

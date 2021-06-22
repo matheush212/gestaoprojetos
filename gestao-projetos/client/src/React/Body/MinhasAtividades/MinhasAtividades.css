@@ -25,7 +25,12 @@
     font-weight: bold !important;
     font-size: 83% !important;
 }
-.btn-voltar-atividades:hover{ color:rgb(82, 82, 82) !important; border-color:rgb(70, 70, 70) !important; }
+
+
+.btn-voltar-atividades:hover{ 
+    color:rgb(82, 82, 82) !important; 
+    border-color:rgb(70, 70, 70) !important; 
+}
 
 
 #divActivityProgress {

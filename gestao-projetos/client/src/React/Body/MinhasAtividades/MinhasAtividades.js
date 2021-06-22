@@ -15,13 +15,20 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import FiltrosEdicao from '../FiltrosPadrao/FiltrosPadrao';
+import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
+import HourglassFullTwoToneIcon from '@material-ui/icons/HourglassFullTwoTone';
+import AssessmentTwoToneIcon from '@material-ui/icons/AssessmentTwoTone';
+import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
+import AccountTreeTwoToneIcon from '@material-ui/icons/AccountTreeTwoTone';
+import PrintIcon from '../../../React/Images/PrintIcon.png';
+import PrinterImage from '../../../Functions/PrinterImage';
 import UrlParm from '../../../Functions/GetUrlParameters';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import Log from '../../../Functions/GeraLog';
 import $ from "jquery";
 let columns = [];
 let message = "";
-let filtros = "";
 let idAtividade = "";
 let tokenRef = UrlParm.queryString("Ref");
 let idProjeto = UrlParm.queryString("IdProjeto");
@@ -37,6 +44,7 @@ class MinhasAtividades extends React.Component {
         this.state = {
             datasource: [],
             openActivityDialog: false,
+            anchorEl: null
         }
 
         PopUp.ExibeMensagem('info', "Filtre e selecione uma linha com o registro desejado!");
@@ -64,6 +72,8 @@ class MinhasAtividades extends React.Component {
                 message = `Você deseja visualizar a atividade '${$(this).find('td:eq(0)').html()}'?`;
                 _this.setState({ openActivityDialog: true });
             });
+
+            this.GetAllActivities();
         }
         catch (err) {
             Log.LogError("MinhasAtividades", "componentDidMount", err.message);
@@ -72,7 +82,7 @@ class MinhasAtividades extends React.Component {
 
 
     GetAllActivities = () => {
-        ApiService.AllActivities(ATIVOS, tokenRef)
+        ApiService.AllActivities(idProjeto, ATIVOS, tokenRef)
             .then(res => {
                 this.setState({ openActivityDialog: false });
                 this.setState({ datasource: [] });
@@ -96,7 +106,7 @@ class MinhasAtividades extends React.Component {
 
 
     GetActivitiesByDate = (dataDe, dataAte) => {
-        ApiService.ActivitiesByDate(ATIVOS, dataDe, dataAte, tokenRef)
+        ApiService.ActivitiesByDate(idProjeto, ATIVOS, dataDe, dataAte, tokenRef)
             .then(res => {
                 this.setState({ openActivityDialog: false });
                 this.setState({ datasource: [] });
@@ -122,7 +132,7 @@ class MinhasAtividades extends React.Component {
 
 
     GetActivitiesByFilter = (filtroSelecionado, textFilter) => {
-        ApiService.ActivitiesByFilter(ATIVOS, filtroSelecionado, textFilter, tokenRef)
+        ApiService.ActivitiesByFilter(idProjeto, ATIVOS, filtroSelecionado, textFilter, tokenRef)
             .then(res => {
                 this.setState({ openActivityDialog: false });
                 this.setState({ datasource: [] });
@@ -172,25 +182,31 @@ class MinhasAtividades extends React.Component {
     }
 
 
+    OpenMenuBar = (event) => {
+        this.setState({ anchorEl: event.currentTarget });
+    }
+
+
+    CloseMenuBar = (action) => {
+        this.setState({ anchorEl: null });
+    }
+
+
     VizualizeActivityDialog = () => {
         this.setState({ openActivityDialog: false });
-        window.location.href = "VisualizaAtividade?Ref=" + tokenRef + "&IdAtividade=" + idAtividade;
+        window.location.href = "VisualizaAtividade?Ref=" + tokenRef + "&IdAtividade=" + idAtividade + "&IdProjeto=" + idProjeto;
     }
 
 
-    GetFilters = () => {
-        filtros = [
-            { value: "Todos", label: "Todos" },
-            { value: "Nome", label: "Nome" },
-            { value: "DataInicio", label: "Dt Início" },
-            { value: "DataFinal", label: "Dt. Final" },
-            { value: "Porcentagem", label: "Porcentagem" },
-            { value: "Atrasado", label: "Atrasados" },
-            { value: "Finalizado", label: "Finalizados" },
-            { value: "DataCadastro", label: "Dt. Cadastro" },
-        ]
+    NovaAtividade = () => {
+        window.location.href = "NovaAtividade?Ref=" + tokenRef + "&IdProjeto=" + idProjeto;
     }
-    
+
+
+    GoToMeusProjetos = () => {
+        window.location.href = "MeusProjetos?Ref=" + tokenRef;
+    }
+
 
     Voltar = () => {
         window.location.href = "VisualizaProjeto?Ref=" + tokenRef + "&IdProjeto=" + idProjeto;
@@ -198,11 +214,27 @@ class MinhasAtividades extends React.Component {
 
 
     render() {
-        this.GetFilters();
-
         return (
             <div className="body-table-atividades">
-                <FiltrosEdicao SelectAll={this.GetAllActivities} FilterChange={this.FilterChangeActivities} filtros={filtros} />
+                <div className="menu-superior">
+                    <AddCircleTwoToneIcon className="icons-menu" color="primary" onClick={this.NovaAtividade} />
+                    <Button className="buttons-menu" onClick={this.NovaAtividade}>Nova Atividade</Button>
+                    <AccountTreeTwoToneIcon className="icons-menu" color="primary" onClick={this.GoToMeusProjetos} />
+                    <Button className="buttons-menu" onClick={this.GoToMeusProjetos}>Meus Projetos</Button>
+                    <HourglassFullTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
+                    <Button className="buttons-menu" >Tempo Gasto Geral</Button>
+                    <AssessmentTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
+                    <Button className="buttons-menu">Gráficos</Button>
+                    <SearchTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
+                    <Button className="buttons-menu">Filtros</Button>
+                    <div className="box-perfil" aria-controls="simple-menu" aria-haspopup="true" onMouseOver={this.OpenMenuBar}>E</div>
+                    <Menu id="simple-menu" anchorEl={this.state.anchorEl} keepMounted open={Boolean(this.state.anchorEl)} onClose={this.CloseMenuBar}>
+                        <div className="user-info">Euax</div>
+                        <MenuItem onClick={() => this.CloseMenuBar("Perfil")}>Perfil</MenuItem>
+                        <MenuItem onClick={() => this.CloseMenuBar("TrocaSenha")}>Trocar Senha</MenuItem>
+                    </Menu>
+                    <div className="printer-style-projetos"><img src={PrintIcon} width="37" alt="Printer" onClick={PrinterImage.Print}></img></div>
+                </div>
                 <div className="table-padrao">
                     <Dialog open={this.state.openActivityDialog} onClose={this.CloseActivityDialog} aria-labelledby="draggable-dialog-title">
                         <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">Confirmação!</DialogTitle>

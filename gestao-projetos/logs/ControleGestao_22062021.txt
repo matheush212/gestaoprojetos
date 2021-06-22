@@ -1,0 +1,172 @@
+22/06/2021 08:47:30 -> Tela: FiltrosPadrao - Função: SelectChange - Erro: Cannot set property 'disabled' of null
+
+22/06/2021 08:47:32 -> Tela: FiltrosPadrao - Função: SelectChange - Erro: Cannot set property 'disabled' of null
+
+22/06/2021 12:11:37 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 12:12:03 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 12:12:30 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 12:12:30 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 13:25:58 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 13:35:13 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 13:35:13 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 13:35:13 -> Tela: VisualizaProjeto - Função: GetProjectByID - Erro: Autorização negada!
+
+22/06/2021 13:49:05 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 13:49:57 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 13:51:24 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 13:54:56 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 13:56:05 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:04:38 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:04:38 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:05:40 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:07:42 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:07:52 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:07:53 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:07:55 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:07:56 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:08:01 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:08:07 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:08:08 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:08:24 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:08:24 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:08:30 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:08:31 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:08:39 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:08:39 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:08:40 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:08:40 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:08:50 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:08:56 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:08:57 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:09:17 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:09:17 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:09:35 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:10:54 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:10:56 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:10:58 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:10:58 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:11:02 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:11:02 -> Tela: MeusProjetos - Função: DestroySession - Erro: Não foi possível remover o profile!
+
+22/06/2021 14:19:21 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:19:35 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:19:36 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:19:44 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:19:44 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:19:49 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:19:49 -> Tela: MeusProjetos - Função: DestroySession - Erro: Não foi possível remover o profile!
+
+22/06/2021 14:26:09 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:53:36 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:53:36 -> Tela: MeusProjetos - Função: DestroySession - Erro: Não foi possível remover o profile!
+
+22/06/2021 14:53:37 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:53:37 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:53:37 -> Tela: VisualizaProjeto - Função: GetProjectByID - Erro: Autorização negada!
+
+22/06/2021 14:53:38 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:53:38 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 14:53:38 -> Tela: VisualizaProjeto - Função: GetProjectByID - Erro: Autorização negada!
+
+22/06/2021 15:22:04 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 15:22:04 -> Tela: VisualizaProjeto - Função: GetProjectByID - Erro: Autorização negada!
+
+22/06/2021 15:22:08 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 15:22:08 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 15:22:08 -> Tela: VisualizaProjeto - Função: GetProjectByID - Erro: Autorização negada!
+
+22/06/2021 15:22:14 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 15:22:14 -> Tela: VisualizaProjeto - Função: GetProjectByID - Erro: Autorização negada!
+
+22/06/2021 15:22:26 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 15:22:26 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 15:41:47 -> Tela: VisualizaAtividade - Função: GetProjectByID - Erro: SQLITE_ERROR: no such column: undefined
+
+22/06/2021 15:41:52 -> Tela: VisualizaAtividade - Função: GetProjectByID - Erro: SQLITE_ERROR: no such column: undefined
+
+22/06/2021 15:41:55 -> Tela: VisualizaAtividade - Função: GetProjectByID - Erro: SQLITE_ERROR: no such column: undefined
+
+22/06/2021 15:42:06 -> Tela: VisualizaAtividade - Função: GetProjectByID - Erro: SQLITE_ERROR: no such column: undefined
+
+22/06/2021 15:42:16 -> Tela: VisualizaAtividade - Função: GetProjectByID - Erro: SQLITE_ERROR: no such column: undefined
+
+22/06/2021 15:42:18 -> Tela: VisualizaAtividade - Função: GetProjectByID - Erro: SQLITE_ERROR: no such column: undefined
+
+22/06/2021 16:25:59 -> Tela: NovaAtividade - Função: CadastraAtividade - Erro: Unexpected token < in JSON at position 0
+
+22/06/2021 16:34:23 -> Tela: VisualizaAtividade - Função: EditaAtividade - Erro: Unexpected token < in JSON at position 0
+
+22/06/2021 17:27:20 -> Tela: VisualizaAtividade - Função: EditaAtividade - Erro: Unexpected token < in JSON at position 0
+
+22/06/2021 17:28:46 -> Tela: VisualizaAtividade - Função: EditaAtividade - Erro: SQLITE_ERROR: no such column: IdProjeto
+
+22/06/2021 17:29:34 -> Tela: VisualizaAtividade - Função: EditaAtividade - Erro: SQLITE_ERROR: no such column: IdProjeto
+
+22/06/2021 17:29:50 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 17:29:50 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+22/06/2021 17:30:08 -> Tela: VisualizaAtividade - Função: EditaAtividade - Erro: SQLITE_ERROR: no such column: undefined
+
+22/06/2021 17:34:19 -> Tela: VisualizaAtividade - Função: EditaAtividade - Erro: SQLITE_ERROR: no such column: undefined
+

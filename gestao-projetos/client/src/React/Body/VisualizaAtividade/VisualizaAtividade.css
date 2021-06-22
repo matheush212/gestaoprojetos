@@ -1,10 +1,11 @@
-.body-visualiza-projeto{
+.body-visualiza-atividade{
     width: 100%;
     height: 90vh;
     display:inline-block;
 }
 
-.textarea-projeto-edit{
+
+.textarea-atividade-edit{
     width: 45%; 
     float: left;
     margin-top: 2% !important;
@@ -19,6 +20,6 @@
 }
 
 
-.textarea-projeto-edit::placeholder{
+.textarea-atividade-edit::placeholder{
     color: rgba(59, 59, 59, 0.664);
 }

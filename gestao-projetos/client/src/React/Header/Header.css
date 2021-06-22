@@ -3,8 +3,25 @@
     box-shadow: grey 5px 5px 5px 5px;
 }
 
-.logo-font-style{ font-family: 'Arial Black'; font-style: italic; font-size: 140% !important;}
-.title-position-style{ width: auto; height: auto; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 140%; font-weight: bold; }
+
+.logo-font-style{ 
+    font-family: 'Arial Black'; 
+    font-style: italic; 
+    font-size: 140% !important;
+}
+
+
+.title-position-style{ 
+    width: auto; 
+    height: auto; 
+    position: absolute; 
+    left: 50%; 
+    top: 50%; 
+    transform: translate(-50%, -50%); 
+    font-size: 140%; 
+    font-weight: bold; 
+}
+
 
 .sys-logo-header{
     width: 3.9%; 
@@ -12,7 +29,14 @@
     margin-right: 0.5%;
 }
 
-.logo_image_header{width: 55px !important; height: 50px !important; margin-left: 0.5em !important; margin-top: 0.4em;}
+
+.logo_image_header{
+    width: 55px !important; 
+    height: 50px !important; 
+    margin-left: 0.5em !important; 
+    margin-top: 0.4em;
+}
+
 
 @media only screen and (max-width: 1700px){ .title-position-style{left: 56%;}}
 @media only screen and (max-width: 1480px){ .title-position-style{left: 57%;}}

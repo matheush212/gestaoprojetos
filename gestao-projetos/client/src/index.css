@@ -9,6 +9,7 @@ body {
   background-color: rgb(216, 216, 216);
 }
 
+
 #div-after-end{
   width: 100% !important;
   padding: 2em !important;
@@ -22,7 +23,11 @@ body {
   background-color: transparent;
 }
 
-.div-password-icon{float: right !important;}
+
+.div-password-icon{
+  float: right !important;
+}
+
 
 .visible-password-position{
   position: absolute;
@@ -30,6 +35,7 @@ body {
   margin-top: 7.2% !important;
   cursor: pointer !important;
 }
+
 
 .visible-password-off-position{
   position: absolute;
@@ -39,16 +45,19 @@ body {
   display: none !important;
 }
 
+
 .dialog-padrao{
   background-color:rgb(60, 58, 78) !important; 
   color: whitesmoke !important;
 }
+
 
 .selected-padrao {
   background-color: rgba(60, 58, 78, 0.733) !important;
   color: #FFF !important;
   cursor: pointer;
 }
+
 
 .inputs-padrao{
   width: 100%;
@@ -57,6 +66,7 @@ body {
   resize: vertical;
   text-align-last: center;
 }
+
 
 .half-inputs-padrao{
   width: 45%;
@@ -67,8 +77,16 @@ body {
   text-align-last: center;
 }
 
-.half-inputs-padrao::placeholder{color: rgba(59, 59, 59, 0.664);}
-.inputs-padrao::placeholder{color: rgba(59, 59, 59, 0.664);}
+
+.half-inputs-padrao::placeholder{
+  color: rgba(59, 59, 59, 0.664);
+}
+
+
+.inputs-padrao::placeholder{
+  color: rgba(59, 59, 59, 0.664);
+}
+
 
 .button-style-padrao {
   background-color: rgb(60, 58, 78, 0.842) !important;
@@ -79,16 +97,21 @@ body {
   border-radius: 4px !important;
   cursor: pointer !important;
   float: right !important;
-  margin-top: 5% !important;
+  margin-top: 2% !important;
 }
 
-.button-style-padrao:hover { background-color: #535353 !important; }
+
+.button-style-padrao:hover { 
+  background-color: #535353 !important; 
+}
   
+
 .div-assist-padrao {
   float: left;
   width: 13%;
   margin-top: 6px;
 }
+
 
 .div-inputs-padrao {
   float: left;
@@ -96,7 +119,13 @@ body {
   margin-top: 5px;
 }
 
-.row:after { content: ""; display: table; clear: both; }
+
+.row:after { 
+  content: ""; 
+  display: table; 
+  clear: both; 
+}
+
 
 .btn-padrao{
   margin-top: 1.6em !important;
@@ -118,12 +147,21 @@ body {
   font-weight: bold !important;
   font-size: 83% !important;
 }
-.btn-padrao:hover{ color:rgb(82, 82, 82) !important; border-color:rgb(70, 70, 70) !important; }
+
+
+.btn-padrao:hover{ 
+  color:rgb(82, 82, 82) !important; 
+  border-color:rgb(70, 70, 70) !important; 
+}
+
 
 @media only screen and (max-width: 2000px){#div-after-end{display: none !important; }}
 @media only screen and (max-width: 900px){#div-after-end{display: flex !important; }}
 
-code { font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace; }
+
+code { 
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace; 
+}
 
 
 .table-padrao{
@@ -131,7 +169,7 @@ code { font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", mon
   position: relative;
   margin-top: 0.3em !important;
   margin-left: 0.6em !important;
-  width: 98.7% !important;
+  width: 99% !important;
 }
 
 
@@ -189,3 +227,79 @@ tbody tr:nth-child(odd){
 @media only screen and (max-width: 1400px){.table-padrao-container{max-height: 45em !important;}}
 @media only screen and (max-width: 1366px){.table-padrao-container{max-height: 25.8em !important;}}
 @media only screen and (width: 1280px) and (height: 800px){.table-padrao-container{max-height: 30em !important;}}
+
+
+.menu-superior{
+  width: 100%;
+  height: 3.4em;
+  border-top-style: solid;
+  border-bottom-style: solid;
+  border-color: rgba(60, 58, 78, 0.795);
+  border-width: 1px;
+  background-color: rgba(60, 58, 78, 0.226);
+}
+
+
+.box-perfil{
+  float: right !important;
+  width: 45px;
+  height: 45px;
+  margin-top: 0.1em;
+  margin-right: 0.7em !important;
+  border-radius: 50%;
+  background-color: #50526356;
+  border-style: solid;
+  border-width: 2px;
+  border-color: rgb(60, 58, 78);
+  text-align: center !important;
+  font-weight: bold;
+  font-size: x-large;
+  font-style: italic;
+}
+
+
+.user-info{
+  width: 100%;
+  border-bottom-style: solid;
+  height: 2.2em !important;
+  text-align: center;
+  font-weight: bold;
+}
+
+
+.icons-menu{
+  margin-left: 0.6em;
+  margin-top: 0.6em;
+  float: left !important;
+  cursor: pointer;
+  color: rgb(25, 75, 27) !important;
+}
+
+
+.buttons-menu{
+  float: left !important;
+  padding-top: 1.15em !important;
+  text-transform: capitalize !important;
+  font-weight: bold !important;
+}
+
+
+#divProgressProducao {
+  float: left;
+  width: 45%;
+  margin-top: 3%;
+  border-radius: 10%;
+  background-color: rgb(150, 150, 150);
+  text-align: center;
+}
+
+
+#barProgressLine {
+  width: 1%;
+  height: 25px;
+  font-weight: bold;
+  border-radius: 10%;
+  padding-top: 0.15em;
+  font-size: 90%;
+  background-color: green;
+}

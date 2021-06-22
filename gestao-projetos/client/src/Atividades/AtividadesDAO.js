@@ -26,7 +26,10 @@ class AtividadesDAO {
 
     SelectByID(idAtividade, res) {
         try {
-            let sql = `SELECT * FROM Atividades WHERE Id = ${idAtividade} AND Ativo = 1`;
+            let sql = `SELECT Atividades.*, Projetos.Nome as NomeProjeto
+                       FROM Atividades 
+                       INNER JOIN Projetos ON (Projetos.Id = Atividades.IdProjeto)
+                       WHERE Atividades.Id = ${idAtividade} AND Atividades.Ativo = 1`;
 
             instanceDB.get(sql, [], (err, rows) => {
                 res.json(GetJSONDataSQL.ReturnDataJSON(err, rows, 'Atividade'));
@@ -38,11 +41,15 @@ class AtividadesDAO {
     }
 
 
-    SelectAll(status, res) {
+    SelectAll(idProjeto, status, res) {
         try {
-            let sql = `SELECT *, substr(Nome, 0, 40) as NomeAtividade, strftime('%d/%m/%Y', DtCadastro) as DataCadastro, strftime('%d/%m/%Y', DtInicio) as DataInicio, 
-                       strftime('%d/%m/%Y', DtFinal) as DataFinal
-                       FROM Atividades WHERE Ativo = ${status} ORDER BY DtCadastro DESC`;
+            let sql = `SELECT Atividades.*, substr(Atividades.Nome, 0, 40) as NomeAtividade, strftime('%d/%m/%Y', Atividades.DtCadastro) as DataCadastro, 
+                       strftime('%d/%m/%Y', Atividades.DtInicio) as DataInicio, strftime('%d/%m/%Y', Atividades.DtFinal) as DataFinal,
+                       Projetos.Nome as NomeProjeto
+                       FROM Atividades 
+                       INNER JOIN Projetos ON (Projetos.Id = Atividades.IdProjeto)
+                       WHERE Atividades.IdProjeto = ${idProjeto} AND Atividades.Ativo = ${status} 
+                       ORDER BY Atividades.DtCadastro DESC`;
 
             instanceDB.all(sql, [], (err, rows) => {
                 res.json(GetJSONDataSQL.ReturnDataJSON(err, rows, 'Atividades'));
@@ -54,22 +61,24 @@ class AtividadesDAO {
     }
 
 
-    SelectByFilter(status, filtro, text, res) {
+    SelectByFilter(idProjeto, status, filtro, text, res) {
         try {
-            let sql = `SELECT *, substr(Nome, 0, 40) as NomeAtividade, strftime('%d/%m/%Y', DtCadastro) as DataCadastro, strftime('%d/%m/%Y', DtInicio) as DataInicio, 
-                       strftime('%d/%m/%Y', DtFinal) as DataFinal
-                       FROM Atividades `;
+            let sql = `SELECT Atividades.*, substr(Atividades.Nome, 0, 40) as NomeAtividade, strftime('%d/%m/%Y', Atividades.DtCadastro) as DataCadastro, 
+                       strftime('%d/%m/%Y', Atividades.DtInicio) as DataInicio, strftime('%d/%m/%Y', Atividades.DtFinal) as DataFinal,
+                       Projetos.Nome as NomeProjeto
+                       FROM Atividades 
+                       INNER JOIN Projetos ON (Projetos.Id = Atividades.IdProjeto) `;
 
             if (filtro == "TipoUsuario")
-                sql += `WHERE TipoUsuario LIKE '%${text}%' AND Ativo = ${status} ORDER BY DtCadastro DESC`;
+                sql += `WHERE TipoUsuario LIKE '%${text}%' AND Atividades.IdProjeto = ${idProjeto} AND Atividades.Ativo = ${status} ORDER BY Atividades.DtCadastro DESC`;
             else if (filtro == "Nome")
-                sql += `WHERE Nome LIKE '%${text}%' AND Ativo = ${status} ORDER BY DtCadastro DESC`;
+                sql += `WHERE Nome LIKE '%${text}%' AND Atividades.IdProjeto = ${idProjeto} AND Atividades.Ativo = ${status} ORDER BY Atividades.DtCadastro DESC`;
             else if (filtro == "Login")
-                sql += `WHERE Login LIKE '%${text}%' AND Ativo = ${status} ORDER BY DtCadastro DESC`;
+                sql += `WHERE Login LIKE '%${text}%' AND Atividades.IdProjeto = ${idProjeto} AND Atividades.Ativo = ${status} ORDER BY Atividades.DtCadastro DESC`;
             else if (filtro == "Email")
-                sql += `WHERE Email LIKE '${text}%' AND Ativo = ${status} ORDER BY DtCadastro DESC`;
+                sql += `WHERE Email LIKE '${text}%' AND Atividades.IdProjeto = ${idProjeto} AND Atividades.Ativo = ${status} ORDER BY Atividades.DtCadastro DESC`;
             else
-                sql += `WHERE Ativo = ${status} ORDER BY DtCadastro DESC`;
+                sql += `WHERE Atividades.IdProjeto = ${idProjeto} AND Atividades.Ativo = ${status} ORDER BY Atividades.DtCadastro DESC`;
 
 
             instanceDB.all(sql, [], (err, rows) => {
@@ -84,10 +93,13 @@ class AtividadesDAO {
 
     SelectByDate(status, campo, dataDe, dataAte, res) {
         try {
-            let sql = `SELECT *, substr(Nome, 0, 40) as NomeAtividade, strftime('%d/%m/%Y', DtCadastro) as DataCadastro, strftime('%d/%m/%Y', DtInicio) as DataInicio, 
-                       strftime('%d/%m/%Y', DtFinal) as DataFinal
+            let sql = `SELECT Atividades.*, substr(Atividades.Nome, 0, 40) as NomeAtividade, strftime('%d/%m/%Y', Atividades.DtCadastro) as DataCadastro, 
+                       strftime('%d/%m/%Y', Atividades.DtInicio) as DataInicio, strftime('%d/%m/%Y', Atividades.DtFinal) as DataFinal,
+                       Projetos.Nome as NomeProjeto
                        FROM Atividades 
-                       WHERE DtCadastro >= '${dataDe}' AND DtCadastro <= '${dataAte}' AND Ativo = ${status} ORDER BY DtCadastro DESC`;
+                       INNER JOIN Projetos ON (Projetos.Id = Atividades.IdProjeto)
+                       WHERE Atividades.IdProjeto = ${idProjeto} AND Atividades.DtCadastro >= '${dataDe}' AND Atividades.DtCadastro <= '${dataAte}' AND 
+                       Atividades.Ativo = ${status} ORDER BY Atividades.DtCadastro DESC`;
 
             instanceDB.all(sql, [], (err, rows) => {
                 res.json(GetJSONDataSQL.ReturnDataJSON(err, rows, "Atividade(s)"));
@@ -122,7 +134,7 @@ class AtividadesDAO {
 
     EditActivity(obj, res) {
         try {
-            let sql = `UPDATE Projetos SET IdProjeto=${obj.idProjeto}, Nome='${obj.nome}', Descricao='${obj.descricao}', DtInicio='${obj.dtInicio}', DtFinal='${obj.dtFinal}', Finalizado=${obj.finalizado},
+            let sql = `UPDATE Atividades SET IdProjeto=${obj.idProjeto}, Nome='${obj.nome}', Descricao='${obj.descricao}', DtInicio='${obj.dtInicio}', DtFinal='${obj.dtFinal}', Finalizado=${obj.finalizado},
                        DtCadastro='${obj.dtCadastro}' WHERE Id=${obj.id}`;
 
             instanceDB.run(sql, [], function (err) {

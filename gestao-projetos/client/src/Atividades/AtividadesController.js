@@ -16,10 +16,10 @@ class AtividadesController {
     }
 
 
-    GetActivityByID(idProjeto, res) {
+    GetActivityByID(idActivity, res) {
         try {
             let instaceDAO = new atividadesDAO.AtividadesDAO();
-            instaceDAO.SelectByID(idProjeto, res);
+            instaceDAO.SelectByID(idActivity, res);
         }
         catch (err) {
             Log.LogError("AtividadesController", "GetActivityByID", err.message);
@@ -27,10 +27,10 @@ class AtividadesController {
     }
 
 
-    GetAllActivities(status, res) {
+    GetAllActivities(idProjeto, status, res) {
         try {
             let instaceDAO = new atividadesDAO.AtividadesDAO();
-            instaceDAO.SelectAll(status, res);
+            instaceDAO.SelectAll(idProjeto, status, res);
         }
         catch (err) {
             Log.LogError("AtividadesController", "GetAllActivities", err.message);
@@ -38,10 +38,10 @@ class AtividadesController {
     }
 
 
-    GetActivitiesByDate(status, dataDe, dataAte, res) {
+    GetActivitiesByDate(idProjeto, status, dataDe, dataAte, res) {
         try {
             let instaceDAO = new atividadesDAO.AtividadesDAO();
-            instaceDAO.SelectByDate(status, dataDe, dataAte, res);
+            instaceDAO.SelectByDate(idProjeto, status, dataDe, dataAte, res);
         }
         catch (err) {
             Log.LogError("AtividadesController", "GetActivitiesByDate", err.message);
@@ -49,10 +49,10 @@ class AtividadesController {
     }
 
 
-    GetActivitiesByFilter(status, filtro, text, res) {
+    GetActivitiesByFilter(idProjeto, status, filtro, text, res) {
         try {
             let instaceDAO = new atividadesDAO.AtividadesDAO();
-            instaceDAO.SelectByFilter(status, filtro, text, res);
+            instaceDAO.SelectByFilter(idProjeto, status, filtro, text, res);
         }
         catch (err) {
             Log.LogError("AtividadesController", "GetActivitiesByFilter", err.message);

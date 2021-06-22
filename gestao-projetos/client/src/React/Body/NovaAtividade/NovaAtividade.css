@@ -1,12 +1,12 @@
-.body-visualiza-projeto{
+.body-nova-atividade{
     width: 100%;
     height: 90vh;
     display:inline-block;
 }
 
-.textarea-projeto-edit{
-    width: 45%; 
-    float: left;
+
+.textarea-atividade{
+    width: 100%; 
     margin-top: 2% !important;
     resize: none !important; 
     outline: none !important; 
@@ -19,6 +19,6 @@
 }
 
 
-.textarea-projeto-edit::placeholder{
+.textarea-atividade::placeholder{
     color: rgba(59, 59, 59, 0.664);
 }

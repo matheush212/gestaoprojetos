@@ -1,6 +1,7 @@
 import React from 'react';
-import './NovoProjeto.css';
+import './NovaAtividade.css';
 import 'materialize-css/dist/css/materialize.min.css';
+import ApiService from '../../Utils/ApiService';
 import PopUp from '../../Utils/PopUp';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -15,29 +16,54 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import StyleControl from '../../../Functions/ControleCSSBotoes';
 import AccountTreeTwoToneIcon from '@material-ui/icons/AccountTreeTwoTone';
+import { ClearField, ConfigControl } from '../../../Functions/ConfigTextFieldList';
 import HourglassFullTwoToneIcon from '@material-ui/icons/HourglassFullTwoTone';
 import AssessmentTwoToneIcon from '@material-ui/icons/AssessmentTwoTone';
 import AutenticacaoSession from '../../../Autenticacao/AutenticacaoSession';
 import Log from '../../../Functions/GeraLog';
-let nome = '', descricao = '', dtInicio = '', dtFinal = '';
+let idProjeto = '', nome = '', descricao = '', dtInicio = '', dtFinal = '';
 let tokenRef = UrlParam.queryString("Ref");
+let projectID = UrlParam.queryString("IdProjeto");
+const STATUS_200 = 200;
+const STATUS_400 = 400;
+const ATIVOS = 1;
 
 
-class NovoProjeto extends React.Component {
+class NovaAtividade extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             openDialog: false,
             dialogText: '',
-            anchorEl: null
+            anchorEl: null,
+            projetos: []
         }
     }
 
 
     componentDidMount() {
-        StyleControl.CSSBotoes("BtnNovoProjeto", window.screen.width, window.screen.height);
+        StyleControl.CSSBotoes("BtnNovaAtividade", window.screen.width, window.screen.height);
         document.getElementById("div-after-end").style.setProperty('display', 'flex', 'important');
+        this.GetAllProjects();
+    }
+
+
+    GetAllProjects = () => {
+        ApiService.AllProjects(ATIVOS, tokenRef).then(res => {
+            this.setState({ projetos: [] });
+            if (res.status === STATUS_200)
+                this.setState({ projetos: [...this.state.projetos, ...res.data] });
+            else if (res.status === STATUS_400)
+                PopUp.ExibeMensagem('info', res.message);
+            else {
+                PopUp.ExibeMensagem('error', "Não foi possível carregar os projetos");
+                Log.LogError("NovaAtividade", "GetAllProjects", res.message);
+            }
+        }).catch(err => {
+            PopUp.ExibeMensagem('error', 'Falha na comunicação com a API ao listar os projetos');
+            Log.LogError("NovaAtividade", "GetAllProjects", err.message);
+        });
     }
 
 
@@ -45,16 +71,19 @@ class NovoProjeto extends React.Component {
         try {
             let campoNulo = "";
 
-            if (document.getElementById("NomeProjeto").value !== "") {
-                if (document.getElementById("DtInicioProjeto").value !== "") {
-                    if (document.getElementById("DtFinalProjeto").value !== "") {
-                        campoNulo = "";
+            if (document.getElementById("TipoProjeto").value !== "") {
+                if (document.getElementById("NomeAtividade").value !== "") {
+                    if (document.getElementById("DtInicioAtividade").value !== "") {
+                        if (document.getElementById("DtFinalAtividade").value !== "") {
+                            campoNulo = "";
+                        }
+                        else campoNulo = "Data Final";
                     }
-                    else campoNulo = "Data Final";
+                    else campoNulo = "Data Início";
                 }
-                else campoNulo = "Data Início";
+                else campoNulo = "Nome da Atividade";
             }
-            else campoNulo = "Nome do Projeto";
+            else campoNulo = "Projeto";
 
             if (campoNulo !== "")
                 PopUp.ExibeMensagem('info', "O campo '" + campoNulo + "' não pode ser nulo!");
@@ -63,7 +92,7 @@ class NovoProjeto extends React.Component {
             }
         }
         catch (err) {
-            Log.LogError("NovoProjeto", "ValidaCamposNulos", err.message);
+            Log.LogError("NovaAtividade", "ValidaCamposNulos", err.message);
         }
     }
 
@@ -71,7 +100,7 @@ class NovoProjeto extends React.Component {
     handleOpen = () => {
         this.setState({
             openDialog: true,
-            dialogText: "Você deseja realmente cadastrar o projeto '" + document.getElementById("NomeProjeto").value + "'?"
+            dialogText: "Você deseja realmente cadastrar a atividade '" + document.getElementById("NomeAtividade").value + "'?"
         });
     };
 
@@ -83,18 +112,18 @@ class NovoProjeto extends React.Component {
 
     handleConfirm = () => {
         this.setState({ openDialog: false });
-        this.CadastraProjeto();
+        this.CadastraAtividade();
     }
 
 
-    CadastraProjeto = () => {
+    CadastraAtividade = () => {
         if (AutenticacaoSession.Authorize()) {
-            this.GetDadosProjeto();
+            this.GetDadosAtividade();
 
-            fetch('http://' + window.location.hostname + ':5000/api/sgb/new/project', {
+            fetch('http://' + window.location.hostname + ':5000/api/sgb/new/activity', {
                 method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    "nome": nome, "descricao": descricao, "dtInicio": dtInicio,
+                    "idProjeto": idProjeto, "nome": nome, "descricao": descricao, "dtInicio": dtInicio,
                     "dtFinal": dtFinal, "dtCadastro": GetDate.ReturnCurrentDate(), "token": tokenRef,
                 })
             }).then((response) => response.json()).then((res) => {
@@ -104,12 +133,12 @@ class NovoProjeto extends React.Component {
                     this.ResetVariaveis();
                 }
                 else {
-                    PopUp.ExibeMensagem('error', "Não foi possível cadastrar o Projeto!");
-                    Log.LogError("NovoProjeto", "CadastraProjeto", res.message);
+                    PopUp.ExibeMensagem('error', "Não foi possível cadastrar a Atividade!");
+                    Log.LogError("NovaAtividade", "CadastraAtividade", res.message);
                 }
             }).catch(err => {
                 PopUp.ExibeMensagem('error', "Não foi possível comunicar com a API");
-                Log.LogError("NovoProjeto", "CadastraProjeto", err.message);
+                Log.LogError("NovaAtividade", "CadastraAtividade", err.message);
             });
         }
         else
@@ -117,24 +146,27 @@ class NovoProjeto extends React.Component {
     }
 
 
-    GetDadosProjeto = () => {
+    GetDadosAtividade = () => {
         try {
-            nome = document.getElementById("NomeProjeto").value;
-            descricao = "Descrição: \n\n" + document.getElementById("DescProjeto").value;
-            dtInicio = document.getElementById("DtInicioProjeto").value;
-            dtFinal = document.getElementById("DtFinalProjeto").value;
+            let projetoVal = document.getElementById("TipoProjeto").value;
+            idProjeto = document.querySelector("#projetos option[value='" + projetoVal + "']").dataset.value;
+
+            nome = document.getElementById("NomeAtividade").value;
+            descricao = "Descrição: \n\n" + document.getElementById("DescAtividade").value;
+            dtInicio = document.getElementById("DtInicioAtividade").value;
+            dtFinal = document.getElementById("DtFinalAtividade").value;
         }
         catch (err) {
-            Log.LogError("NovoProjeto", "GetDadosProjeto", err.message);
+            Log.LogError("NovaAtividade", "GetDadosAtividade", err.message);
         }
     }
 
 
     LimpaCampos = () => {
-        document.getElementById("NomeProjeto").value = "";
-        document.getElementById("DescProjeto").value = "";
-        document.getElementById("DtInicioProjeto").value = "";
-        document.getElementById("DtFinalProjeto").value = "";
+        document.getElementById("NomeAtividade").value = "";
+        document.getElementById("DescAtividade").value = "";
+        document.getElementById("DtInicioAtividade").value = "";
+        document.getElementById("DtFinalAtividade").value = "";
     }
 
 
@@ -162,13 +194,13 @@ class NovoProjeto extends React.Component {
 
 
     Voltar = () => {
-        window.location.href = "MeusProjetos?Ref=" + tokenRef;
+        window.location.href = "MinhasAtividades?Ref=" + tokenRef + "&IdProjeto=" + projectID;
     }
 
 
     render() {
         return (
-            <div className="body-novo-projeto">
+            <div className="body-nova-atividade">
                 <Dialog open={this.state.openDialog} onClose={this.handleClose} aria-labelledby="draggable-dialog-title">
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">Cadastro!</DialogTitle>
                     <DialogContent>
@@ -200,25 +232,31 @@ class NovoProjeto extends React.Component {
                         <div className="row">
                             <div className="div-assist-padrao"></div>
                             <div className="div-inputs-padrao" style={{ marginTop: '10px' }}>
-                                <TextField type="text" autoFocus helperText="Nome do Projeto" id="NomeProjeto" className="inputs-padrao" placeholder="Nome *" />
+                                <TextField type="text" autoFocus helperText="Projeto" id="TipoProjeto" onFocus={() => ClearField("TipoProjeto")} onBlur={() => ConfigControl("TipoProjeto")} inputProps={{ list: "projetos" }} className="half-inputs-padrao" placeholder="Projeto *" />
+                                <datalist id="projetos">
+                                    {this.state.projetos.map((row, index) => {
+                                        return (<option key={index} data-value={String(row.Id)} value={row.Nome} />);
+                                    })}
+                                </datalist>
+                                <TextField type="text" helperText="Nome da Atividade" id="NomeAtividade" style={{ marginLeft: '10%' }} className="half-inputs-padrao" placeholder="Nome *" />
                             </div>
                         </div>
                         <div className="row">
                             <div className="div-assist-padrao"></div>
                             <div className="div-inputs-padrao">
-                                <textarea id="DescProjeto" className="textarea-projeto" placeholder="Descrição"></textarea>
+                                <textarea id="DescAtividade" className="textarea-atividade" placeholder="Descrição"></textarea>
                             </div>
                         </div>
                         <div className="row">
                             <div className="div-assist-padrao"></div>
                             <div className="div-inputs-padrao">
-                                <TextField type="date" helperText="Data Início" id="DtInicioProjeto" className="inputs-padrao" />
+                                <TextField type="date" helperText="Data Início" id="DtInicioAtividade" className="inputs-padrao" />
                             </div>
                         </div>
                         <div className="row">
                             <div className="div-assist-padrao"></div>
                             <div className="div-inputs-padrao">
-                                <TextField type="date" helperText="Data Final" id="DtFinalProjeto" className="inputs-padrao" />
+                                <TextField type="date" helperText="Data Final" id="DtFinalAtividade" className="inputs-padrao" />
                             </div>
                         </div>
                         <div className="row">
@@ -229,10 +267,10 @@ class NovoProjeto extends React.Component {
                         </div>
                     </div>
                 </div>
-                <Button id="BtnNovoProjeto" className="btn-padrao" onClick={this.Voltar}>Voltar</Button>
+                <Button id="BtnNovaAtividade" className="btn-padrao" onClick={this.Voltar}>Voltar</Button>
                 <div id="div-after-end"></div>
             </div>
         )
     }
 }
-export default NovoProjeto;
+export default NovaAtividade;

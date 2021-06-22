@@ -1,5 +1,5 @@
 import React from 'react';
-import './VisualizaProjeto.css';
+import './VisualizaAtividade.css';
 import 'materialize-css/dist/css/materialize.min.css';
 import ApiService from '../../Utils/ApiService';
 import PopUp from '../../Utils/PopUp';
@@ -14,74 +14,97 @@ import UrlParam from '../../../Functions/GetUrlParameters';
 import AccountTreeTwoToneIcon from '@material-ui/icons/AccountTreeTwoTone';
 import HourglassFullTwoToneIcon from '@material-ui/icons/HourglassFullTwoTone';
 import AssessmentTwoToneIcon from '@material-ui/icons/AssessmentTwoTone';
-import AssignmentTurnedInTwoToneIcon from '@material-ui/icons/AssignmentTurnedInTwoTone';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { ClearField, ConfigControl } from '../../../Functions/ConfigTextFieldList';
 import StyleControl from '../../../Functions/ControleCSSBotoes';
 import AutenticacaoSession from '../../../Autenticacao/AutenticacaoSession';
 import Log from '../../../Functions/GeraLog';
-let nome = '', descricao = '', dtInicio = '', dtFinal = '', finalizado = '', dtCadastro = '';
+let idProjeto = '', nome = '', descricao = '', dtInicio = '', dtFinal = '', finalizado = '', dtCadastro = '';
 let tokenRef = UrlParam.queryString("Ref");
-let idProjeto = UrlParam.queryString("IdProjeto");
+let projectID = UrlParam.queryString("IdProjeto");
+let idAtividade = UrlParam.queryString("IdAtividade");
 const STATUS_200 = 200;
+const STATUS_400 = 400;
+const ATIVOS = 1;
 
 
-class VisualizaProjeto extends React.Component {
+class VisualizaAtividade extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             openDialog: false,
             dialogText: '',
-            anchorEl: null
+            anchorEl: null,
+            projetos: []
         }
     }
 
 
     componentDidMount() {
-        StyleControl.CSSBotoes("BtnVoltarProjeto", window.screen.width, window.screen.height);
-        StyleControl.CSSBotoes("BtnInativaProjeto", window.screen.width, window.screen.height, "9.5em");
-        StyleControl.CSSBotoes("BtnExcluiProjeto", window.screen.width, window.screen.height, "19.1em");
+        StyleControl.CSSBotoes("BtnVoltarAtividade", window.screen.width, window.screen.height);
+        StyleControl.CSSBotoes("BtnInativaAtividade", window.screen.width, window.screen.height, "9.5em");
+        StyleControl.CSSBotoes("BtnExcluiAtividade", window.screen.width, window.screen.height, "19.1em");
         document.getElementById("div-after-end").style.setProperty('display', 'flex', 'important');
-        this.GetProjectByID();
+        this.GetAllProjects();
+        this.GetActivityByID();
     }
 
 
-    GetProjectByID = () => {
-        ApiService.ProjectByID(idProjeto, tokenRef).then(res => {
+    GetAllProjects = () => {
+        ApiService.AllProjects(ATIVOS, tokenRef).then(res => {
+            this.setState({ projetos: [] });
             if (res.status === STATUS_200)
-                this.PreencheDadosProjeto(res.data);
+                this.setState({ projetos: [...this.state.projetos, ...res.data] });
+            else if (res.status === STATUS_400)
+                PopUp.ExibeMensagem('info', res.message);
             else {
-                PopUp.ExibeMensagem('error', "Não foi possível encontrar o projeto");
-                Log.LogError("VisualizaProjeto", "GetProjectByID", res.message);
+                PopUp.ExibeMensagem('error', "Não foi possível carregar os projetos");
+                Log.LogError("NovaAtividade", "GetAllProjects", res.message);
             }
         }).catch(err => {
-            PopUp.ExibeMensagem('error', 'Falha na comunicação com a API');
-            Log.LogError("VisualizaProjeto", "GetProjectByID", err.message);
+            PopUp.ExibeMensagem('error', 'Falha na comunicação com a API ao listar os projetos');
+            Log.LogError("NovaAtividade", "GetAllProjects", err.message);
         });
     }
 
 
-    PreencheDadosProjeto = (dados) => {
-        document.getElementById("NomeProjetoEdit").value = dados.Nome;
-        document.getElementById("DescProjetoEdit").value = dados.Descricao;
-        document.getElementById("DtInicioProjetoEdit").value = dados.DtInicio;
-        document.getElementById("DtFinalProjetoEdit").value = dados.DtFinal;
-        document.getElementById("DtCadastroEdit").value = dados.DtCadastro;
+    GetActivityByID = () => {
+        ApiService.ActivityByID(idAtividade, tokenRef).then(res => {
+            if (res.status === STATUS_200)
+                this.PreencheDadosAtividade(res.data);
+            else {
+                PopUp.ExibeMensagem('error', "Não foi possível encontrar a atividade");
+                Log.LogError("VisualizaAtividade", "GetActivityByID", res.message);
+            }
+        }).catch(err => {
+            PopUp.ExibeMensagem('error', 'Falha na comunicação com a API');
+            Log.LogError("VisualizaAtividade", "GetActivityByID", err.message);
+        });
+    }
+
+
+    PreencheDadosAtividade = (dados) => {
+        document.getElementById("TipoProjetoEdit").value = dados.NomeProjeto;
+        document.getElementById("NomeAtividadeEdit").value = dados.Nome;
+        document.getElementById("DescAtividadeEdit").value = dados.Descricao;
+        document.getElementById("DtInicioAtividadeEdit").value = dados.DtInicio;
+        document.getElementById("DtFinalAtividadeEdit").value = dados.DtFinal;
+        document.getElementById("DtCadastroAtividadeEdit").value = dados.DtCadastro;
         document.getElementById("barProgressLine").style.width = dados.Porcentagem + "%";
         document.getElementById("barProgressLine").innerHTML = dados.Porcentagem + "% Concluído";
 
         if (Number(dados.Atrasado === 0))
-            document.getElementById("AtrasadoEdit").value = "Não";
+            document.getElementById("AtividadeAtrasadaEdit").value = "Não";
         else
-            document.getElementById("AtrasadoEdit").value = "Sim";
+            document.getElementById("AtividadeAtrasadaEdit").value = "Sim";
 
 
         if (Number(dados.Finalizado === 0))
-            document.getElementById("FinalizadoEdit").value = "Não";
+            document.getElementById("AtividadeFinalizadaEdit").value = "Não";
         else
-            document.getElementById("FinalizadoEdit").value = "Sim";
+            document.getElementById("AtividadeFinalizadaEdit").value = "Sim";
     }
 
 
@@ -89,10 +112,10 @@ class VisualizaProjeto extends React.Component {
         try {
             let campoNulo = "";
 
-            if (document.getElementById("NomeProjetoEdit").value !== "") {
-                if (document.getElementById("DtInicioProjetoEdit").value !== "") {
-                    if (document.getElementById("DtFinalProjetoEdit").value !== "") {
-                        if (document.getElementById("DtCadastroEdit").value !== "") {
+            if (document.getElementById("NomeAtividadeEdit").value !== "") {
+                if (document.getElementById("DtInicioAtividadeEdit").value !== "") {
+                    if (document.getElementById("DtFinalAtividadeEdit").value !== "") {
+                        if (document.getElementById("DtCadastroAtividadeEdit").value !== "") {
                             campoNulo = "";
                         }
                         else campoNulo = "Data de Cadastro";
@@ -110,7 +133,7 @@ class VisualizaProjeto extends React.Component {
             }
         }
         catch (err) {
-            Log.LogError("VisualizaProjeto", "ValidaCamposNulos", err.message);
+            Log.LogError("VisualizaAtividade", "ValidaCamposNulos", err.message);
         }
     }
 
@@ -118,7 +141,7 @@ class VisualizaProjeto extends React.Component {
     handleOpen = () => {
         this.setState({
             openDialog: true,
-            dialogText: "Você deseja realmente editar o projeto '" + document.getElementById("NomeProjetoEdit").value + "'?"
+            dialogText: "Você deseja realmente editar a atividade '" + document.getElementById("NomeAtividadeEdit").value + "'?"
         });
     };
 
@@ -130,30 +153,30 @@ class VisualizaProjeto extends React.Component {
 
     handleConfirm = () => {
         this.setState({ openDialog: false });
-        this.EditaProjeto();
+        this.EditaAtividade();
     }
 
 
-    EditaProjeto = () => {
+    EditaAtividade = () => {
         if (AutenticacaoSession.Authorize()) {
-            this.GetDadosProjeto();
+            this.GetDadosAtividade();
 
-            fetch('http://' + window.location.hostname + ':5000/api/sgb/edit/project', {
+            fetch('http://' + window.location.hostname + ':5000/api/sgb/edit/activity', {
                 method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    "idProjeto": idProjeto, "nome": nome, "descricao": descricao, "dtInicio": dtInicio,
+                    "idProjeto": idProjeto, "idAtividade": idAtividade, "nome": nome, "descricao": descricao, "dtInicio": dtInicio,
                     "dtFinal": dtFinal, "finalizado": finalizado, "dtCadastro": dtCadastro, "token": tokenRef,
                 })
             }).then((response) => response.json()).then((res) => {
-                if (res.status === 200)
+                if (res.status === STATUS_200)
                     PopUp.ExibeMensagem('success', res.message);
                 else {
                     PopUp.ExibeMensagem('error', "Não foi possível editar o Projeto!");
-                    Log.LogError("VisualizaProjeto", "EditaProjeto", res.message);
+                    Log.LogError("VisualizaAtividade", "EditaAtividade", res.message);
                 }
             }).catch(err => {
                 PopUp.ExibeMensagem('error', "Não foi possível comunicar com a API");
-                Log.LogError("VisualizaProjeto", "EditaProjeto", err.message);
+                Log.LogError("VisualizaAtividade", "EditaAtividade", err.message);
             });
         }
         else
@@ -161,36 +184,34 @@ class VisualizaProjeto extends React.Component {
     }
 
 
-    GetDadosProjeto = () => {
+    GetDadosAtividade = () => {
         try {
-            nome = document.getElementById("NomeProjetoEdit").value;
-            descricao = document.getElementById("DescProjetoEdit").value;
-            dtInicio = document.getElementById("DtInicioProjetoEdit").value;
-            dtFinal = document.getElementById("DtFinalProjetoEdit").value;
-            dtCadastro = document.getElementById("DtCadastroEdit").value;
+            let projetoVal = document.getElementById("TipoProjetoEdit").value;
+            idProjeto = document.querySelector("#projetosEdit option[value='" + projetoVal + "']").dataset.value;
 
-            if (document.getElementById("FinalizadoEdit").value === "Sim")
+            nome = document.getElementById("NomeAtividadeEdit").value;
+            descricao = document.getElementById("DescAtividadeEdit").value;
+            dtInicio = document.getElementById("DtInicioAtividadeEdit").value;
+            dtFinal = document.getElementById("DtFinalAtividadeEdit").value;
+            dtCadastro = document.getElementById("DtCadastroAtividadeEdit").value;
+
+            if (document.getElementById("AtividadeFinalizadaEdit").value === "Sim")
                 finalizado = 1;
             else
                 finalizado = 0;
         }
         catch (err) {
-            Log.LogError("VisualizaProjeto", "GetDadosProjeto", err.message);
+            Log.LogError("VisualizaAtividade", "GetDadosAtividade", err.message);
         }
     }
 
 
-    VisualizaAtividades = () => {
-        window.location.href = "MinhasAtividades?Ref=" + tokenRef + "&IdProjeto=" + idProjeto;
-    }
-
-
-    InativaProjeto = () => {
+    InativaAtividade = () => {
         //
     }
 
 
-    ExcluiProjeto = () => {
+    ExcluiAtividade = () => {
         //
     }
 
@@ -211,13 +232,13 @@ class VisualizaProjeto extends React.Component {
 
 
     Voltar = () => {
-        window.location.href = "MeusProjetos?Ref=" + tokenRef;
+        window.location.href = "MinhasAtividades?Ref=" + tokenRef + "&IdProjeto=" + projectID;
     }
 
 
     render() {
         return (
-            <div className="body-visualiza-projeto">
+            <div className="body-visualiza-atividade">
                 <Dialog open={this.state.openDialog} onClose={this.handleClose} aria-labelledby="draggable-dialog-title">
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">Edição!</DialogTitle>
                     <DialogContent>
@@ -231,9 +252,7 @@ class VisualizaProjeto extends React.Component {
                     </DialogActions>
                 </Dialog>
                 <div className="menu-superior">
-                    <AssignmentTurnedInTwoToneIcon className="icons-menu" color="primary" onClick={this.VisualizaAtividades}/>
-                    <Button className="buttons-menu" onClick={this.VisualizaAtividades}>Atividades</Button>
-                    <AccountTreeTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" onClick={this.GoToMeusProjetos} />
+                    <AccountTreeTwoToneIcon className="icons-menu" color="primary" onClick={this.GoToMeusProjetos} />
                     <Button className="buttons-menu" onClick={this.GoToMeusProjetos}>Meus Projetos</Button>
                     <HourglassFullTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
                     <Button className="buttons-menu">Tempo Gasto Geral</Button>
@@ -251,15 +270,26 @@ class VisualizaProjeto extends React.Component {
                         <div className="row">
                             <div className="div-assist-padrao"></div>
                             <div className="div-inputs-padrao" style={{ marginTop: '20px' }}>
-                                <TextField type="text" autoFocus helperText="Nome do Projeto" id="NomeProjetoEdit" className="half-inputs-padrao" placeholder="Nome *" />
-                                <textarea id="DescProjetoEdit" className="textarea-projeto-edit" style={{ marginLeft: '10%' }} placeholder="Descrição"></textarea>
+                                <TextField type="text" autoFocus helperText="Projeto" id="TipoProjetoEdit" onFocus={() => ClearField("TipoProjetoEdit")} onBlur={() => ConfigControl("TipoProjetoEdit")} inputProps={{ list: "projetosEdit" }} className="inputs-padrao" placeholder="Projeto *" />
+                                <datalist id="projetosEdit">
+                                    {this.state.projetos.map((row, index) => {
+                                        return (<option key={index} data-value={String(row.Id)} value={row.Nome} />);
+                                    })}
+                                </datalist>
                             </div>
                         </div>
                         <div className="row">
                             <div className="div-assist-padrao"></div>
                             <div className="div-inputs-padrao">
-                                <TextField type="date" helperText="Data Início" id="DtInicioProjetoEdit" className="half-inputs-padrao" />
-                                <TextField type="date" helperText="Data Final" id="DtFinalProjetoEdit" style={{ marginLeft: '10%' }} className="half-inputs-padrao" />
+                                <TextField type="text" autoFocus helperText="Nome da Atividade" id="NomeAtividadeEdit" className="half-inputs-padrao" placeholder="Nome *" />
+                                <textarea id="DescAtividadeEdit" className="textarea-atividade-edit" style={{ marginLeft: '10%' }} placeholder="Descrição"></textarea>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="div-assist-padrao"></div>
+                            <div className="div-inputs-padrao">
+                                <TextField type="date" helperText="Data Início" id="DtInicioAtividadeEdit" className="half-inputs-padrao" />
+                                <TextField type="date" helperText="Data Final" id="DtFinalAtividadeEdit" style={{ marginLeft: '10%' }} className="half-inputs-padrao" />
                             </div>
                         </div>
                         <div className="row">
@@ -268,15 +298,15 @@ class VisualizaProjeto extends React.Component {
                                 <div id="divProgressProducao">
                                     <div id="barProgressLine"></div>
                                 </div>
-                                <TextField type="text" helperText="Atrasado?" inputProps={{ readOnly: true }} id="AtrasadoEdit" style={{ marginLeft: '10%' }} className="half-inputs-padrao" />
+                                <TextField type="text" helperText="Atrasado?" inputProps={{ readOnly: true }} id="AtividadeAtrasadaEdit" style={{ marginLeft: '10%' }} className="half-inputs-padrao" />
                             </div>
                         </div>
                         <div className="row">
                             <div className="div-assist-padrao"></div>
                             <div className="div-inputs-padrao">
-                                <TextField type="date" helperText="Data de Cadastro" id="DtCadastroEdit" className="half-inputs-padrao" />
-                                <TextField type="text" helperText="Finalizado?" onFocus={() => ClearField("FinalizadoEdit")} onBlur={() => ConfigControl("FinalizadoEdit")} inputProps={{ list: "lstFinalizado" }} id="FinalizadoEdit" style={{ marginLeft: '10%' }} className="half-inputs-padrao" />
-                                <datalist id="lstFinalizado">
+                                <TextField type="date" helperText="Data de Cadastro" id="DtCadastroAtividadeEdit" className="half-inputs-padrao" />
+                                <TextField type="text" helperText="Finalizado?" id="AtividadeFinalizadaEdit" onFocus={() => ClearField("AtividadeFinalizadaEdit")} onBlur={() => ConfigControl("AtividadeFinalizadaEdit")} inputProps={{ list: "lstAtividadeFinalizada" }} style={{ marginLeft: '10%' }} className="half-inputs-padrao" />
+                                <datalist id="lstAtividadeFinalizada">
                                     <option key={0} value={"Sim"} />
                                     <option key={1} value={"Não"} />
                                 </datalist>
@@ -290,12 +320,12 @@ class VisualizaProjeto extends React.Component {
                         </div>
                     </div>
                 </div>
-                <Button id="BtnVoltarProjeto" className="btn-padrao" onClick={this.Voltar}>Voltar</Button>
-                <Button id="BtnInativaProjeto" className="btn-padrao" onClick={this.InativaProjeto}>Inativar</Button>
-                <Button id="BtnExcluiProjeto" className="btn-padrao" onClick={this.ExcluiProjeto}>Excluir</Button>
+                <Button id="BtnVoltarAtividade" className="btn-padrao" onClick={this.Voltar}>Voltar</Button>
+                <Button id="BtnInativaAtividade" className="btn-padrao" onClick={this.InativaAtividade}>Inativar</Button>
+                <Button id="BtnExcluiAtividade" className="btn-padrao" onClick={this.ExcluiAtividade}>Excluir</Button>
                 <div id="div-after-end"></div>
             </div>
         )
     }
 }
-export default VisualizaProjeto;
+export default VisualizaAtividade;

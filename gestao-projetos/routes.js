@@ -20,19 +20,19 @@ async function GetRoutes(dirname, app) {
             }
         });
 
-        app.get("/api/sgp/all/activities/:status/:token", (req, res, next) => {
+        app.get("/api/sgp/all/activities/:idProjeto/:status/:token", (req, res, next) => {
             if (AuthControl(req.params.token, res)) {
                 let controllerClass = require(dirname + '/client/src/Atividades/AtividadesController');
                 let instanceController = new controllerClass.AtividadesController();
-                instanceController.GetAllActivities(req.params.status, res);
+                instanceController.GetAllActivities(req.params.idProjeto, req.params.status, res);
             }
         });
 
-        app.get("/api/sgp/get/activity/by/id/:idActivity/:token", (req, res, next) => {
+        app.get("/api/sgp/get/activity/by/id/:idAtividade/:token", (req, res, next) => {
             if (AuthControl(req.params.token, res)) {
                 let controllerClass = require(dirname + '/client/src/Atividades/AtividadesController');
                 let instanceController = new controllerClass.AtividadesController();
-                instanceController.GetActivityByID(req.params.idActivity, res);
+                instanceController.GetActivityByID(req.params.idAtividade, res);
             }
         });
     }
@@ -90,15 +90,15 @@ async function PostRoutes(dirname, app) {
         app.post("/api/sgb/new/activity", (req, res, next) => {
             if (AuthControl(req.body.token, res)) {
                 let controllerClass = require(dirname + '/client/src/Atividades/AtividadesController');
-                let instanceController = new controllerClass.ProjetosController();
-                instanceController.CriaNovaAtividade(req.body.nome, req.body.descricao, req.body.dtInicio, req.body.dtFinal, req.body.dtCadastro, res);
+                let instanceController = new controllerClass.AtividadesController();
+                instanceController.CriaNovaAtividade(req.body.idProjeto, req.body.nome, req.body.descricao, req.body.dtInicio, req.body.dtFinal, req.body.dtCadastro, res);
             }
         });
 
         app.post("/api/sgb/edit/activity", (req, res, next) => {
             if (AuthControl(req.body.token, res)) {
                 let controllerClass = require(dirname + '/client/src/Atividades/AtividadesController');
-                let instanceController = new controllerClass.ProjetosController();
+                let instanceController = new controllerClass.AtividadesController();
                 instanceController.EditaAtividade(req.body.idAtividade, req.body.idProjeto, req.body.nome, req.body.descricao, req.body.dtInicio, req.body.dtFinal, req.body.finalizado, req.body.dtCadastro, res);
             }
         });

@@ -16,6 +16,7 @@ import PopUp from '../../Utils/PopUp';
 import Log from '../../../Functions/GeraLog';
 import { v4 as uuidv4 } from 'uuid';
 const ENTER = 13;
+const STATUS_200 = 200;
 
 
 const CheckSuccessLogin = (login, paswd) => {
@@ -30,7 +31,7 @@ const CheckSuccessLogin = (login, paswd) => {
                     "password": paswd
                 })
             }).then((response) => response.json()).then((res) => {
-                if (res.status === 200) {
+                if (res.status === STATUS_200) {
                     PopUp.ExibeMensagem('success', res.message);
                     SaveProfile(res);
                 }
@@ -53,7 +54,7 @@ const SaveProfile = (res) => {
     let accessID = uuidv4();
     ApiService.SaveUserProfile(accessID, res.data.Id, res.data.TipoUsuario, res.token)
         .then(res => {
-            if (res.status === 200)
+            if (res.status === STATUS_200)
                 window.location.href = 'MeusProjetos?Ref=' + accessID;
             else {
                 PopUp.ExibeMensagem('error', "Não foi possível criar a sessão! Por favor, tente novamente!");
@@ -91,7 +92,7 @@ const ViewPassword = () => {
 
 
 const EnterKeyPressLogin = (event) => {
-    if (event.keyCode === ENTER){
+    if (event.keyCode === ENTER) {
         let login = document.getElementById("LoginField").value;
         let passw = document.getElementById("PasswordField").value;
         CheckSuccessLogin(login, passw);
@@ -100,18 +101,10 @@ const EnterKeyPressLogin = (event) => {
 
 
 const useStyles = makeStyles((theme) => ({
-    paper: {
-        marginTop: theme.spacing(3), display: 'flex', flexDirection: 'column', alignItems: 'center',
-    },
-    avatar: {
-        margin: theme.spacing(1), backgroundColor: 'black',
-    },
-    form: {
-        width: '100%', marginTop: theme.spacing(1),
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2), backgroundColor: '#00103B'
-    },
+    paper: { marginTop: theme.spacing(3), display: 'flex', flexDirection: 'column', alignItems: 'center', },
+    avatar: { margin: theme.spacing(1), backgroundColor: 'black', },
+    form: { width: '100%', marginTop: theme.spacing(1), },
+    submit: { margin: theme.spacing(3, 0, 2), backgroundColor: '#00103B' },
 }));
 
 
@@ -146,7 +139,6 @@ const ContainerLogin = () => {
                     <div className="div-space-after-end"></div>
                 </form>
             </div>
-
         </div>
     );
 }

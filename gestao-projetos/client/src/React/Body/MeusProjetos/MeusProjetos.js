@@ -15,9 +15,14 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
+import HourglassFullTwoToneIcon from '@material-ui/icons/HourglassFullTwoTone';
+import AssessmentTwoToneIcon from '@material-ui/icons/AssessmentTwoTone';
+import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import PrintIcon from '../../../React/Images/PrintIcon.png';
+import PrinterImage from '../../../Functions/PrinterImage';
 import UrlParm from '../../../Functions/GetUrlParameters';
 import Log from '../../../Functions/GeraLog';
 import $ from "jquery";
@@ -44,7 +49,7 @@ class MeusProjetos extends React.Component {
         PopUp.ExibeMensagem('info', "Filtre e selecione uma linha com o registro desejado!");
 
         columns = [
-            { id: "NomeProjeto", label: 'Nome', minWidth: 80, align: 'center' },
+            { id: "NomeProjeto", label: 'Nome do Projeto', minWidth: 80, align: 'center' },
             { id: "DataInicio", label: 'Dt. Inicial', minWidth: 80, align: 'center' },
             { id: "DataFinal", label: 'Dt. Final', minWidth: 80, align: 'center' },
             { id: "Porcentagem", label: '% Completo', minWidth: 50, align: 'center' },
@@ -239,8 +244,12 @@ class MeusProjetos extends React.Component {
                 <div className="menu-superior">
                     <AddCircleTwoToneIcon className="icons-menu" color="primary" onClick={this.NovoProjeto} />
                     <Button className="buttons-menu" onClick={this.NovoProjeto}>Novo Projeto</Button>
-                    <Button className="buttons-menu" style={{ marginLeft: '0.5%' }}>Projetos</Button>
-                    <Button className="buttons-menu" style={{ marginLeft: '0.5%' }}>Filtros</Button>
+                    <HourglassFullTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
+                    <Button className="buttons-menu" >Tempo Gasto Geral</Button>
+                    <AssessmentTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
+                    <Button className="buttons-menu">Gráficos</Button>
+                    <SearchTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
+                    <Button className="buttons-menu">Filtros</Button>
                     <div className="box-perfil" aria-controls="simple-menu" aria-haspopup="true" onMouseOver={this.OpenMenuBar}>E</div>
                     <Menu id="simple-menu" anchorEl={this.state.anchorEl} keepMounted open={Boolean(this.state.anchorEl)} onClose={this.CloseMenuBar}>
                         <div className="user-info">Euax</div>
@@ -248,6 +257,7 @@ class MeusProjetos extends React.Component {
                         <MenuItem onClick={() => this.CloseMenuBar("TrocaSenha")}>Trocar Senha</MenuItem>
                         <MenuItem onClick={() => this.CloseMenuBar("LogOut")}>Sair</MenuItem>
                     </Menu>
+                    <div className="printer-style-projetos"><img src={PrintIcon} width="37" alt="Printer" onClick={PrinterImage.Print}></img></div>
                 </div>
                 <div className="table-padrao">
                     <Dialog open={this.state.openProjectDialog} onClose={this.CloseProjectDialog} aria-labelledby="draggable-dialog-title">
