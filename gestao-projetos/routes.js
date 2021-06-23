@@ -57,12 +57,20 @@ async function PostRoutes(dirname, app) {
             session.GetProfile(req.body.accessID, res);
         });
 
-        app.post("/api/sgp/remove/profile/:token", (req, res, next) => {
-            session.RemoveProfile(req.params.token, res);
+        app.post("/api/sgp/remove/profile", (req, res, next) => {
+            session.RemoveProfile(req.body.token, res);
         });
 
         app.post("/api/sgp/gera/log", (req, res, next) => {
             log.LogError(req.body.screen, req.body.functionName, req.body.message);
+        });
+
+        app.post("/api/sgp/get/dados/user/:idUsuario/:token", (req, res, next) => {
+            if (AuthControl(req.params.token, res)) {
+                let userController = require(dirname + '/client/src/Usuarios/UsuariosController');
+                let instaceUserController = new userController.UsuariosController();
+                instaceUserController.GetDadosUser(req.params.idUsuario, res);
+            }
         });
 
         app.post("/api/sgp/check/login", (req, res, next) => {
@@ -71,7 +79,7 @@ async function PostRoutes(dirname, app) {
             instanceController.GetAcessoLogin(req.body.login, req.body.password, res);
         });
 
-        app.post("/api/sgb/new/project", (req, res, next) => {
+        app.post("/api/sgp/new/project", (req, res, next) => {
             if (AuthControl(req.body.token, res)) {
                 let controllerClass = require(dirname + '/client/src/Projetos/ProjetosController');
                 let instanceController = new controllerClass.ProjetosController();
@@ -79,7 +87,7 @@ async function PostRoutes(dirname, app) {
             }
         });
 
-        app.post("/api/sgb/edit/project", (req, res, next) => {
+        app.post("/api/sgp/edit/project", (req, res, next) => {
             if (AuthControl(req.body.token, res)) {
                 let controllerClass = require(dirname + '/client/src/Projetos/ProjetosController');
                 let instanceController = new controllerClass.ProjetosController();
@@ -87,7 +95,7 @@ async function PostRoutes(dirname, app) {
             }
         });
 
-        app.post("/api/sgb/new/activity", (req, res, next) => {
+        app.post("/api/sgp/new/activity", (req, res, next) => {
             if (AuthControl(req.body.token, res)) {
                 let controllerClass = require(dirname + '/client/src/Atividades/AtividadesController');
                 let instanceController = new controllerClass.AtividadesController();
@@ -95,11 +103,43 @@ async function PostRoutes(dirname, app) {
             }
         });
 
-        app.post("/api/sgb/edit/activity", (req, res, next) => {
+        app.post("/api/sgp/edit/activity", (req, res, next) => {
             if (AuthControl(req.body.token, res)) {
                 let controllerClass = require(dirname + '/client/src/Atividades/AtividadesController');
                 let instanceController = new controllerClass.AtividadesController();
                 instanceController.EditaAtividade(req.body.idAtividade, req.body.idProjeto, req.body.nome, req.body.descricao, req.body.dtInicio, req.body.dtFinal, req.body.finalizado, req.body.dtCadastro, res);
+            }
+        });
+
+        app.post("/api/sgp/users/alteraperfil", (req, res, next) => {
+            if (AuthControl(req.body.token, res)) {
+                let userController = require(dirname + '/client/src/Usuarios/UsuariosController');
+                let instaceUserController = new userController.UsuariosController();
+                instaceUserController.AlteraPerfilUser(req.body.idUsuario, req.body.nome, req.body.login, res);
+            }
+        });
+
+        app.post("/api/sgp/users/alterasenha", (req, res, next) => {
+            if (AuthControl(req.body.token, res)) {
+                let userController = require(dirname + '/client/src/Usuarios/UsuariosController');
+                let instaceUserController = new userController.UsuariosController();
+                instaceUserController.AlteraSenhaUsuario(req.body.idUsuario, req.body.senhaAtual, req.body.novaSenha, res);
+            }
+        });
+
+        app.post("/api/sgp/filtros/projeto", (req, res, next) => {
+            if (AuthControl(req.body.token, res)) {
+                let userController = require(dirname + '/client/src/Projetos/ProjetosController');
+                let instaceUserController = new userController.ProjetosController();
+                instaceUserController.ControleFiltrosProjeto(req.body.filters, res);
+            }
+        });
+
+        app.post("/api/sgp/filtros/atividades", (req, res, next) => {
+            if (AuthControl(req.body.token, res)) {
+                let userController = require(dirname + '/client/src/Atividades/AtividadesController');
+                let instaceUserController = new userController.AtividadesController();
+                instaceUserController.ControleFiltrosAtividade(req.body.idProjeto, req.body.filters, res);
             }
         });
     }
@@ -112,7 +152,21 @@ exports.PostRoutes = PostRoutes;
 
 async function PutRoutes(dirname, app) {
     try {
-        //
+        app.put("/api/sgp/controle/projeto/ativo/:idProjeto/:status/:token", (req, res, next) => {
+            if (AuthControl(req.params.token, res)) {
+                let controllerClass = require(dirname + '/client/src/Projetos/ProjetosController');
+                let instanceController = new controllerClass.ProjetosController();
+                instanceController.ControleProjetoAtivo(req.params.idProjeto, req.params.status, res);
+            }
+        });
+
+        app.put("/api/sgp/controle/atividade/ativa/:idAtividade/:status/:token", (req, res, next) => {
+            if (AuthControl(req.params.token, res)) {
+                let controllerClass = require(dirname + '/client/src/Atividades/AtividadesController');
+                let instanceController = new controllerClass.AtividadesController();
+                instanceController.ControleAtividadeAtiva(req.params.idAtividade, req.params.status, res);
+            }
+        });
     }
     catch (err) {
         log.LogError("routes", "PutRoutes", err.message);
@@ -123,7 +177,21 @@ exports.PutRoutes = PutRoutes;
 
 async function DeleteRoutes(dirname, app) {
     try {
-        //
+        app.delete("/api/sgp/remove/projeto/:idProjeto/:token", (req, res, next) => {
+            if (AuthControl(req.params.token, res)) {
+                let controllerClass = require(dirname + '/client/src/Projetos/ProjetosController');
+                let instanceController = new controllerClass.ProjetosController();
+                instanceController.ExcluiProjeto(req.params.idProjeto, res);
+            }
+        });
+
+        app.delete("/api/sgp/remove/atividade/:idAtividade/:token", (req, res, next) => {
+            if (AuthControl(req.params.token, res)) {
+                let controllerClass = require(dirname + '/client/src/Atividades/AtividadesController');
+                let instanceController = new controllerClass.AtividadesController();
+                instanceController.ExcluiAtividade(req.params.idAtividade, res);
+            }
+        });
     }
     catch (err) {
         log.LogError("routes", "DeleteRoutes", err.message);

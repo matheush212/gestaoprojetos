@@ -91,7 +91,7 @@ class NovoProjeto extends React.Component {
         if (AutenticacaoSession.Authorize()) {
             this.GetDadosProjeto();
 
-            fetch('http://' + window.location.hostname + ':5000/api/sgb/new/project', {
+            fetch('http://' + window.location.hostname + ':5000/api/sgp/new/project', {
                 method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     "nome": nome, "descricao": descricao, "dtInicio": dtInicio,
@@ -153,6 +153,11 @@ class NovoProjeto extends React.Component {
 
     CloseMenuBar = (action) => {
         this.setState({ anchorEl: null });
+
+        if (action === "Perfil")
+            window.location.href = "AlteraPerfil?Ref=" + tokenRef;
+        else if (action === "TrocaSenha")
+            window.location.href = "AlteraSenha?Ref=" + tokenRef;
     }
 
 
@@ -171,11 +176,7 @@ class NovoProjeto extends React.Component {
             <div className="body-novo-projeto">
                 <Dialog open={this.state.openDialog} onClose={this.handleClose} aria-labelledby="draggable-dialog-title">
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">Cadastro!</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            {this.state.dialogText}
-                        </DialogContentText>
-                    </DialogContent>
+                    <DialogContent><DialogContentText>{this.state.dialogText}</DialogContentText></DialogContent>
                     <DialogActions>
                         <Button className="dialog-padrao" onClick={this.handleConfirm} color="primary">Sim</Button>
                         <Button className="dialog-padrao" onClick={this.handleClose} color="primary">Não</Button>

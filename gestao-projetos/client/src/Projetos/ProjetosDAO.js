@@ -54,47 +54,33 @@ class ProjetosDAO {
     }
 
 
-    SelectByFilter(status, filtro, text, res) {
+    SelectByFilter(filters, res) {
         try {
-            let sql = `SELECT *, substr(Nome, 0, 40) as NomeProjeto, strftime('%d/%m/%Y', DtCadastro) as DataCadastro, strftime('%d/%m/%Y', DtInicio) as DataInicio, 
+            let groupLength = filters.length;
+
+            if (groupLength > 0) {
+                let sql = `SELECT *, substr(Nome, 0, 40) as NomeProjeto, strftime('%d/%m/%Y', DtCadastro) as DataCadastro, strftime('%d/%m/%Y', DtInicio) as DataInicio, 
                        strftime('%d/%m/%Y', DtFinal) as DataFinal
-                       FROM Projetos `;
+                       FROM Projetos WHERE `;
 
-            if (filtro == "TipoUsuario")
-                sql += `WHERE TipoUsuario LIKE '%${text}%' AND Ativo = ${status} ORDER BY DtCadastro DESC`;
-            else if (filtro == "Nome")
-                sql += `WHERE Nome LIKE '%${text}%' AND Ativo = ${status} ORDER BY DtCadastro DESC`;
-            else if (filtro == "Login")
-                sql += `WHERE Login LIKE '%${text}%' AND Ativo = ${status} ORDER BY DtCadastro DESC`;
-            else if (filtro == "Email")
-                sql += `WHERE Email LIKE '${text}%' AND Ativo = ${status} ORDER BY DtCadastro DESC`;
+                for (let i = 0; i < groupLength; i++) {
+                    if ((i + 1) != (groupLength))
+                        sql += `${filters[i].key} ${filters[i].operator} '${filters[i].value}' AND `;
+                    else
+                        sql += `${filters[i].key} ${filters[i].operator} '${filters[i].value}'`;
+                }
+
+                console.log(sql);
+
+                instanceDB.all(sql, [], (err, rows) => {
+                    res.json(GetJSONDataSQL.ReturnDataJSON(err, rows, "Projeto(s)"));
+                });
+            }
             else
-                sql += `WHERE Ativo = ${status} ORDER BY DtCadastro DESC`;
-
-
-            instanceDB.all(sql, [], (err, rows) => {
-                res.json(GetJSONDataSQL.ReturnDataJSON(err, rows, "Projeto(s)"));
-            });
+                this.SelectAll(1, res);
         }
         catch (err) {
             Log.LogError("ProjetosDAO", "SelectByFilter", err.message);
-        }
-    }
-
-
-    SelectByDate(status, campo, dataDe, dataAte, res) {
-        try {
-            let sql = `SELECT *, substr(Nome, 0, 40) as NomeProjeto, strftime('%d/%m/%Y', DtCadastro) as DataCadastro, strftime('%d/%m/%Y', DtInicio) as DataInicio, 
-                       strftime('%d/%m/%Y', DtFinal) as DataFinal
-                       FROM Projetos 
-                       WHERE DtCadastro >= '${dataDe}' AND DtCadastro <= '${dataAte}' AND Ativo = ${status} ORDER BY DtCadastro DESC`;
-
-            instanceDB.all(sql, [], (err, rows) => {
-                res.json(GetJSONDataSQL.ReturnDataJSON(err, rows, "Projeto(s)"));
-            });
-        }
-        catch (err) {
-            Log.LogError("ProjetosDAO", "SelectByDate", err.message);
         }
     }
 
@@ -134,6 +120,40 @@ class ProjetosDAO {
         }
         catch (err) {
             Log.LogError("ProjetosDAO", "EditProject", err.message);
+        }
+    }
+
+
+    RemoveAtividade(idProjeto, res) {
+        try {
+            let sql = `DELETE FROM Atividades WHERE IdProjeto=${idProjeto}`;
+
+            instanceDB.run(sql, [], (err) => {
+                if (err)
+                    res.json({ "status": 404, "message": err.message });
+                else
+                    this.RemoveProjeto(idProjeto, res);
+            });
+        }
+        catch (err) {
+            Log.LogError("ProjetosDAO", "RemoveAtividade", err.message);
+        }
+    }
+
+
+    RemoveProjeto(idProjeto, res) {
+        try {
+            let sql = `DELETE FROM Projetos WHERE Id=${idProjeto}`;
+
+            instanceDB.run(sql, [], function (err) {
+                if (err)
+                    res.json({ "status": 404, "message": err.message });
+                else
+                    res.json({ "status": 200, "message": "Projeto excluído com sucesso!" });
+            });
+        }
+        catch (err) {
+            Log.LogError("ProjetosDAO", "RemoveProjeto", err.message);
         }
     }
 

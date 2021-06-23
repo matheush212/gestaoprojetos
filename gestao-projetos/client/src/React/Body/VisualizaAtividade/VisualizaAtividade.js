@@ -27,6 +27,7 @@ let idAtividade = UrlParam.queryString("IdAtividade");
 const STATUS_200 = 200;
 const STATUS_400 = 400;
 const ATIVOS = 1;
+const INATIVA = 0;
 
 
 class VisualizaAtividade extends React.Component {
@@ -37,7 +38,9 @@ class VisualizaAtividade extends React.Component {
             openDialog: false,
             dialogText: '',
             anchorEl: null,
-            projetos: []
+            projetos: [],
+            openBoxInativaAtividade: false,
+            openBoxExcluiAtividade: false
         }
     }
 
@@ -161,7 +164,7 @@ class VisualizaAtividade extends React.Component {
         if (AutenticacaoSession.Authorize()) {
             this.GetDadosAtividade();
 
-            fetch('http://' + window.location.hostname + ':5000/api/sgb/edit/activity', {
+            fetch('http://' + window.location.hostname + ':5000/api/sgp/edit/activity', {
                 method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     "idProjeto": idProjeto, "idAtividade": idAtividade, "nome": nome, "descricao": descricao, "dtInicio": dtInicio,
@@ -205,14 +208,62 @@ class VisualizaAtividade extends React.Component {
         }
     }
 
+    
+    CloseDialogInativaAtividade = () => {
+        this.setState({ openBoxInativaAtividade: false});
+    }
+
+
+    ConfirmDialogInativaAtividade = () => {
+        this.setState({ openBoxInativaAtividade: false});
+        this.InativaAtividade();
+    }
+
 
     InativaAtividade = () => {
-        //
+        ApiService.ControleAtividadeAtiva(idAtividade, INATIVA, tokenRef).then(res => {
+            if (res.status === STATUS_200){
+                PopUp.ExibeMensagem('success', res.message);
+                setTimeout(() => { this.Voltar(); }, 1000);
+            }
+            else if (res.status === STATUS_400)
+                PopUp.ExibeMensagem('info', res.message, 6000);
+            else {
+                PopUp.ExibeMensagem('error', "Não foi possível inativar a atividade");
+                Log.LogError("VisualizaAtividade", "InativaProduto", res.message);
+            }
+        }).catch(err => {
+            PopUp.ExibeMensagem('error', "Não foi possível comunicar com a API");
+            Log.LogError("VisualizaAtividade", "InativaProduto", err.message);
+        });
+    }
+
+
+    CloseDialogExcluiAtividade = () => {
+        this.setState({ openBoxExcluiAtividade: false});
+    }
+
+
+    ConfirmDialogExcluiAtividade = () => {
+        this.setState({ openBoxExcluiAtividade: false});
+        this.ExcluiAtividade();
     }
 
 
     ExcluiAtividade = () => {
-        //
+        ApiService.ExcluiAtividade(idAtividade, tokenRef).then(res => {
+            if (res.status === STATUS_200){
+                PopUp.ExibeMensagem('success', res.message);
+                setTimeout(() => { this.Voltar(); }, 1000);
+            }
+            else {
+                PopUp.ExibeMensagem('error', "Não foi possível excluir a atividade");
+                Log.LogError("VisualizaAtividade", "ExcluiAtividade", res.message);
+            }
+        }).catch(err => {
+            PopUp.ExibeMensagem('error', "Não foi possível comunicar com a API");
+            Log.LogError("VisualizaAtividade", "ExcluiAtividade", err.message);
+        });
     }
 
 
@@ -223,6 +274,11 @@ class VisualizaAtividade extends React.Component {
 
     CloseMenuBar = (action) => {
         this.setState({ anchorEl: null });
+
+        if (action === "Perfil")
+            window.location.href = "AlteraPerfil?Ref=" + tokenRef;
+        else if (action === "TrocaSenha")
+            window.location.href = "AlteraSenha?Ref=" + tokenRef;
     }
 
 
@@ -241,16 +297,31 @@ class VisualizaAtividade extends React.Component {
             <div className="body-visualiza-atividade">
                 <Dialog open={this.state.openDialog} onClose={this.handleClose} aria-labelledby="draggable-dialog-title">
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">Edição!</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            {this.state.dialogText}
-                        </DialogContentText>
-                    </DialogContent>
+                    <DialogContent><DialogContentText>{this.state.dialogText}</DialogContentText></DialogContent>
                     <DialogActions>
                         <Button className="dialog-padrao" onClick={this.handleConfirm} color="primary">Sim</Button>
                         <Button className="dialog-padrao" onClick={this.handleClose} color="primary">Não</Button>
                     </DialogActions>
                 </Dialog>
+
+                <Dialog open={this.state.openBoxInativaAtividade} onClose={this.CloseDialogInativaAtividade} aria-labelledby="draggable-dialog-title">
+                    <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">Aviso!</DialogTitle>
+                    <DialogContent><DialogContentText>Você deseja realmente inativar esta atividade?</DialogContentText></DialogContent>
+                    <DialogActions>
+                        <Button className="dialog-padrao" onClick={this.ConfirmDialogInativaAtividade} color="primary">Sim</Button>
+                        <Button className="dialog-padrao" onClick={this.CloseDialogInativaAtividade} color="primary">Não</Button>
+                    </DialogActions>
+                </Dialog>
+
+                <Dialog open={this.state.openBoxExcluiAtividade} onClose={this.CloseDialogExcluiAtividade} aria-labelledby="draggable-dialog-title">
+                    <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">Aviso!</DialogTitle>
+                    <DialogContent><DialogContentText>Você deseja realmente excluir esta atividade?</DialogContentText></DialogContent>
+                    <DialogActions>
+                        <Button className="dialog-padrao" onClick={this.ConfirmDialogExcluiAtividade} color="primary">Sim</Button>
+                        <Button className="dialog-padrao" onClick={this.CloseDialogExcluiAtividade} color="primary">Não</Button>
+                    </DialogActions>
+                </Dialog>
+
                 <div className="menu-superior">
                     <AccountTreeTwoToneIcon className="icons-menu" color="primary" onClick={this.GoToMeusProjetos} />
                     <Button className="buttons-menu" onClick={this.GoToMeusProjetos}>Meus Projetos</Button>
@@ -321,8 +392,8 @@ class VisualizaAtividade extends React.Component {
                     </div>
                 </div>
                 <Button id="BtnVoltarAtividade" className="btn-padrao" onClick={this.Voltar}>Voltar</Button>
-                <Button id="BtnInativaAtividade" className="btn-padrao" onClick={this.InativaAtividade}>Inativar</Button>
-                <Button id="BtnExcluiAtividade" className="btn-padrao" onClick={this.ExcluiAtividade}>Excluir</Button>
+                <Button id="BtnInativaAtividade" className="btn-padrao" onClick={() => this.setState({ openBoxInativaAtividade: true })}>Inativar</Button>
+                <Button id="BtnExcluiAtividade" className="btn-padrao" style={{color: 'red'}} onClick={() => this.setState({ openBoxExcluiAtividade: true })}>Excluir</Button>
                 <div id="div-after-end"></div>
             </div>
         )

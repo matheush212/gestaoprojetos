@@ -149,6 +149,28 @@ class UsuariosController {
     }
 
 
+    AlteraPerfilUser(idUsuario, nome, login, res) {
+        try {
+            let instaceUserDAO = new userDAO.UsuariosDAO();
+            instaceUserDAO.UpdateUserPerfil(idUsuario, nome, login, res);
+        }
+        catch (err) {
+            Log.LogError("UsuarioController", "GetAcessoLogin", err.message);
+        }
+    }
+
+
+    AlteraSenhaUsuario(idUsuario, senhaAtual, novaSenha, res) {
+        try {
+            let instaceUserDAO = new userDAO.UsuariosDAO();
+            instaceUserDAO.VerificaSenhaAtual(idUsuario, senhaAtual, novaSenha, res);
+        }
+        catch (err) {
+            Log.LogError("UsuarioController", "AlteraSenhaUsuario", err.message);
+        }
+    }
+
+
     ControleUsuarioAtivo(idUsuario, status, res) {
         try {
             let instaceUserDAO = new userDAO.UsuariosDAO();

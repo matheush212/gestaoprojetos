@@ -9,6 +9,8 @@ import VisualizaProjeto from './React/Pages/VisualizaProjeto/VisualizaProjeto';
 import MinhasAtividades from './React/Pages/MinhasAtividades/MinhasAtividades';
 import VisualizaAtividade from './React/Pages/VisualizaAtividade/VisualizaAtividade';
 import NovaAtividade from './React/Pages/NovaAtividade/NovaAtividade';
+import AlteraPerfil from './React/Pages/AlteraPerfil/AlteraPerfil';
+import AlteraSenha from './React/Pages/AlteraSenha/AlteraSenha';
 
 import NotAuthenticated from './React/Pages/NotAuthenticated/NotAuthenticated';
 import NotFound from './React/Pages/NotFound/NotFound';
@@ -66,6 +68,8 @@ ReactDOM.render(
       <PrivateRoute path="/MinhasAtividades" component={MinhasAtividades} />
       <PrivateRoute path="/VisualizaAtividade" component={VisualizaAtividade} />
       <PrivateRoute path="/NovaAtividade" component={NovaAtividade} />
+      <PrivateRoute path="/AlteraPerfil" component={AlteraPerfil} />
+      <PrivateRoute path="/AlteraSenha" component={AlteraSenha} />
       <Route path="/NotAuthenticated" component={NotAuthenticated} />
       <Route component={NotFound} />
     </Switch>

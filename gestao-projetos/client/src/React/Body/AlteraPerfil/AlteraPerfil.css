@@ -1,0 +1,25 @@
+.altera-perfil-box{
+    margin-top: 1%;
+}
+
+.avatar-perfil{
+    margin:0 auto;
+    margin-top: 2em;
+    background-color: black !important;
+}
+
+.perfil-img{
+    width: 120px; /* Can be in percentage also. */
+    height: 120px;
+    margin: 0 auto;
+    position: relative;
+    background-color: #50526356;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(60, 58, 78);
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 480%;
+    margin-top: 0.2em;
+    text-align: center;
+}

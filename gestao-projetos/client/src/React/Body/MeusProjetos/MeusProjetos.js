@@ -18,15 +18,21 @@ import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
 import HourglassFullTwoToneIcon from '@material-ui/icons/HourglassFullTwoTone';
 import AssessmentTwoToneIcon from '@material-ui/icons/AssessmentTwoTone';
 import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
+import DestroySession from '../../../Functions/DestroySession';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import PrintIcon from '../../../React/Images/PrintIcon.png';
 import PrinterImage from '../../../Functions/PrinterImage';
 import UrlParm from '../../../Functions/GetUrlParameters';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import AutenticacaoSession from '../../../Autenticacao/AutenticacaoSession';
 import Log from '../../../Functions/GeraLog';
 import $ from "jquery";
 let columns = [];
+let filters = [];
 let message = "";
 let idProjeto = "";
 let tokenRef = UrlParm.queryString("Ref");
@@ -43,10 +49,16 @@ class MeusProjetos extends React.Component {
             datasource: [],
             openProjectDialog: false,
             openLogOutDialog: false,
-            anchorEl: null
+            anchorEl: null,
+            chkNome: false,
+            chkDtIni: false,
+            chkDtFin: false,
+            chkPercent: false,
+            chkAtrasados: false,
+            chkFinalizados: false
         }
 
-        PopUp.ExibeMensagem('info', "Filtre e selecione uma linha com o registro desejado!");
+        PopUp.ExibeMensagem('info', "Filtre e selecione uma linha com o registro desejado!", 4000);
 
         columns = [
             { id: "NomeProjeto", label: 'Nome do Projeto', minWidth: 80, align: 'center' },
@@ -103,74 +115,6 @@ class MeusProjetos extends React.Component {
             });
     }
 
-
-    GetProjectsByDate = (dataDe, dataAte) => {
-        ApiService.ProjectsByDate(ATIVOS, dataDe, dataAte, tokenRef)
-            .then(res => {
-                this.setState({ openProjectDialog: false });
-                this.setState({ datasource: [] });
-                if (res.status === STATUS_200) {
-                    PopUp.ExibeMensagem('success', res.message);
-                    this.setState({ datasource: [...this.state.datasource, ...res.data] });
-                }
-                else if (res.status === STATUS_400) {
-                    PopUp.ExibeMensagem('info', res.message);
-                    this.setState({ datasource: [] });
-                }
-                else {
-                    PopUp.ExibeMensagem('error', "Não foi possível carregar os projetos");
-                    Log.LogError("MeusProjetos", "GetProjectsByDate", res.message);
-                    this.setState({ datasource: [] });
-                }
-            })
-            .catch(err => {
-                PopUp.ExibeMensagem('error', 'Falha na comunicação com a API ao listar os projetos');
-                Log.LogError("MeusProjetos", "GetProjectsByDate", err.message);
-            });
-    }
-
-
-    GetProjectsByFilter = (filtroSelecionado, textFilter) => {
-        ApiService.ProjectsByFilter(ATIVOS, filtroSelecionado, textFilter, tokenRef)
-            .then(res => {
-                this.setState({ openProjectDialog: false });
-                this.setState({ datasource: [] });
-                if (res.status === STATUS_200) {
-                    PopUp.ExibeMensagem('success', res.message);
-                    this.setState({ datasource: [...this.state.datasource, ...res.data] });
-                }
-                else if (res.status === STATUS_400) {
-                    PopUp.ExibeMensagem('info', res.message);
-                    this.setState({ datasource: [] });
-                }
-                else {
-                    PopUp.ExibeMensagem('error', "Não foi possível carregar os projetos");
-                    Log.LogError("MeusProjetos", "GetProjectsByFilter", res.message);
-                    this.setState({ datasource: [] });
-                }
-            })
-            .catch(err => {
-                PopUp.ExibeMensagem('error', 'Falha na comunicação com a API ao listar os projetos');
-                Log.LogError("MeusProjetos", "GettProjectsByFilter", err.message);
-            });
-    }
-
-
-    FilterChangeProjects = (filtroSelecionado, dataDe, dataAte, textFilter) => {
-        try {
-            if (filtroSelecionado === "Todos")
-                this.GetAllProjects();
-            else if (filtroSelecionado === "Data")
-                this.GetProjectsByDate(dataDe, dataAte)
-            else
-                this.GetProjectsByFilter(filtroSelecionado, textFilter);
-        }
-        catch (err) {
-            Log.LogError("MeusProjetos", "FilterChangeProjects", err.message);
-        }
-    }
-
-
     GetIdProjeto = (id) => {
         idProjeto = id;
     }
@@ -199,7 +143,7 @@ class MeusProjetos extends React.Component {
 
     ConfirmLogOutDialog = () => {
         this.setState({ openLogOutDialog: false });
-        this.DestroySession();
+        DestroySession.Destroy(tokenRef);
     }
 
 
@@ -213,28 +157,68 @@ class MeusProjetos extends React.Component {
 
         if (action === "LogOut")
             this.setState({ openLogOutDialog: true });
+        else if (action === "Perfil")
+            window.location.href = "AlteraPerfil?Ref=" + tokenRef;
+        else if (action === "TrocaSenha")
+            window.location.href = "AlteraSenha?Ref=" + tokenRef;
+    }
+
+
+    CloseDialogFiltersProjeto = () => {
+        this.setState({ openBoxFiltersProjeto: false });
+    }
+
+
+    ConfirmDialogFiltersProjeto = () => {
+        this.setState({ openBoxFiltersProjeto: false });
+        this.setState({ openProjectDialog: false });
+        this.setState({ datasource: [] });
+
+        this.FiltarProjetos();
+    }
+
+
+    FiltarProjetos = () => {
+        this.GetFilters();
+
+        if (AutenticacaoSession.Authorize()) {
+            fetch('http://' + window.location.hostname + ':5000/api/sgp/filtros/projeto', {
+                method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+                body: JSON.stringify({ "filters": filters, "token": tokenRef })
+            }).then((response) => response.json()).then((res) => {
+                if (res.status === STATUS_200)
+                    this.setState({ datasource: [...this.state.datasource, ...res.data] });
+                else if (res.status === STATUS_400)
+                    PopUp.ExibeMensagem('info', res.message);
+                else {
+                    PopUp.ExibeMensagem('error', "Não foi possível encontrar os projetos!");
+                    Log.LogError("MeusProjetos", "FiltarProjetos", res.message);
+                    this.GetAllProjects();
+                }
+            }).catch(err => {
+                PopUp.ExibeMensagem('error', "Não foi possível comunicar com a API");
+                Log.LogError("MeusProjetos", "FiltarProjetos", err.message);
+            });
+        }
+        else
+            PopUp.ExibeMensagem('error', "Autorização Negada!");
+    }
+
+
+    GetFilters = () => {
+        filters = [];
+
+        if (this.state.chkNome) filters.push({ "key": "Nome", "operator": "LIKE", "value": document.getElementById("FiltroNomeProjeto").value + "%" });
+        if (this.state.chkDtIni) filters.push({ "key": "DtInicio", "operator": ">=", "value": document.getElementById("FiltroDtInicioProjeto").value });
+        if (this.state.chkDtFin) filters.push({ "key": "DtFinal", "operator": "<=", "value": document.getElementById("FiltroDtFinalProjeto").value });
+        if (this.state.chkPercent) filters.push({ "key": "Porcentagem", "operator": "=", "value": document.getElementById("FiltroPorcentagemProjeto").value });
+        if (this.state.chkAtrasados) filters.push({ "key": "Atrasado", "operator": "=", "value": 1 });
+        if (this.state.chkFinalizados) filters.push({ "key": "Finalizado", "operator": "=", "value": 1 });
     }
 
 
     NovoProjeto = () => {
         window.location.href = "NovoProjeto?Ref=" + tokenRef;
-    }
-
-
-    DestroySession = () => {
-        ApiService.RemoveUserProfile(tokenRef)
-            .then(res => {
-                if (res.status === STATUS_200)
-                    window.location.href = "/";
-                else {
-                    PopUp.ExibeMensagem('error', res.message);
-                    Log.LogError("MeusProjetos", "DestroySession", res.message);
-                }
-            })
-            .catch(err => {
-                PopUp.ExibeMensagem('error', "Não foi possível comunicar com a API");
-                Log.LogError("MeusProjetos", "DestroySession", err.message);
-            });
     }
 
 
@@ -248,8 +232,8 @@ class MeusProjetos extends React.Component {
                     <Button className="buttons-menu" >Tempo Gasto Geral</Button>
                     <AssessmentTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
                     <Button className="buttons-menu">Gráficos</Button>
-                    <SearchTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
-                    <Button className="buttons-menu">Filtros</Button>
+                    <SearchTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" onClick={() => this.setState({ openBoxFiltersProjeto: true })} />
+                    <Button className="buttons-menu" onClick={() => this.setState({ openBoxFiltersProjeto: true })}>Filtros</Button>
                     <div className="box-perfil" aria-controls="simple-menu" aria-haspopup="true" onMouseOver={this.OpenMenuBar}>E</div>
                     <Menu id="simple-menu" anchorEl={this.state.anchorEl} keepMounted open={Boolean(this.state.anchorEl)} onClose={this.CloseMenuBar}>
                         <div className="user-info">Euax</div>
@@ -277,6 +261,38 @@ class MeusProjetos extends React.Component {
                             <Button className="dialog-padrao" onClick={this.CloseLogOutDialog}>Não</Button>
                         </DialogActions>
                     </Dialog>
+
+                    <Dialog open={this.state.openBoxFiltersProjeto} onClose={this.CloseDialogFiltersProjeto} aria-labelledby="draggable-dialog-title">
+                        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">Filtros!</DialogTitle>
+                        <DialogContent><DialogContentText>Escolha os filtros que você deseja!</DialogContentText></DialogContent>
+                        <div className="filter-fields">
+                            <FormControlLabel className="form-control-label" control={<Checkbox checked={this.state.chkNome} onChange={(event) => this.setState({ chkNome: event.target.checked })} />} label="Nome" />
+                            {this.state.chkNome === true ? (<TextField id="FiltroNomeProjeto" className="textfield-filters" />) : (null)}
+                        </div>
+                        <div className="filter-fields">
+                            <FormControlLabel className="form-control-label" control={<Checkbox checked={this.state.chkDtIni} onChange={(event) => this.setState({ chkDtIni: event.target.checked })} />} label="Dt. Início" />
+                            {this.state.chkDtIni === true ? (<TextField id="FiltroDtInicioProjeto" type="date" className="textfield-filters" />) : (null)}
+                        </div>
+                        <div className="filter-fields">
+                            <FormControlLabel className="form-control-label" control={<Checkbox checked={this.state.chkDtFin} onChange={(event) => this.setState({ chkDtFin: event.target.checked })} />} label="Dt. Final" />
+                            {this.state.chkDtFin === true ? (<TextField id="FiltroDtFinalProjeto" type="date" className="textfield-filters" />) : (null)}
+                        </div>
+                        <div className="filter-fields">
+                            <FormControlLabel className="form-control-label" control={<Checkbox checked={this.state.chkPercent} onChange={(event) => this.setState({ chkPercent: event.target.checked })} />} label="Porcentagem" />
+                            {this.state.chkPercent === true ? (<TextField id="FiltroPorcentagemProjeto" className="textfield-filters" />) : (null)}
+                        </div>
+                        <div className="filter-fields">
+                            <FormControlLabel control={<Checkbox checked={this.state.chkAtrasados} onChange={(event) => this.setState({ chkAtrasados: event.target.checked })} />} label="Atrasados" />
+                        </div>
+                        <div className="filter-fields">
+                            <FormControlLabel control={<Checkbox checked={this.state.chkFinalizados} onChange={(event) => this.setState({ chkFinalizados: event.target.checked })} />} label="Finalizados" />
+                        </div>
+                        <DialogActions>
+                            <Button className="dialog-padrao" onClick={this.ConfirmDialogFiltersProjeto} color="primary">Filtrar</Button>
+                            <Button className="dialog-padrao" onClick={this.CloseDialogFiltersProjeto} color="primary">Fechar</Button>
+                        </DialogActions>
+                    </Dialog>
+
                     <Paper>
                         <TableContainer className="table-padrao-container">
                             <Table id="tbMeusProjetos">

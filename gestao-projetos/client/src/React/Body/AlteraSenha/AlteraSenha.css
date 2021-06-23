@@ -1,0 +1,45 @@
+.altera-senha-box{
+    margin-top: 1%;
+}
+
+
+.div-assist-change-passw {
+    float: left;
+    width: 13%;
+    margin-top: 6px;
+}
+  
+
+.div-inputs-change-passw {
+    float: left;
+    width: 100%;
+    margin-top: 3% !important;
+    position:relative;
+}
+  
+
+.visible-password-pos{
+    right: 1% !important;
+    margin-top: 1.5% !important;
+    cursor: pointer !important;
+    position:absolute;
+}
+
+
+.visible-password-off-pos{
+    right: 1% !important;
+    margin-top: 1.5% !important;
+    cursor: pointer !important;
+    position:absolute;
+    display: none !important;
+}
+
+
+@media screen and (max-width: 1370px) { .div-inputs-change-passw { margin-top: 1px;}}
+@media screen and (max-width: 1290px) { .div-inputs-change-passw { margin-top: 8px;}}
+@media screen and (max-width: 600px) {
+    .div-assist-change-passw, .div-inputs-change-passw {
+      width: 100%;
+      margin-top: 0;
+    }
+}

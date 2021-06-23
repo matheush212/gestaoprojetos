@@ -25,6 +25,8 @@ let nome = '', descricao = '', dtInicio = '', dtFinal = '', finalizado = '', dtC
 let tokenRef = UrlParam.queryString("Ref");
 let idProjeto = UrlParam.queryString("IdProjeto");
 const STATUS_200 = 200;
+const STATUS_400 = 400;
+const INATIVA = 0;
 
 
 class VisualizaProjeto extends React.Component {
@@ -34,7 +36,9 @@ class VisualizaProjeto extends React.Component {
         this.state = {
             openDialog: false,
             dialogText: '',
-            anchorEl: null
+            anchorEl: null,
+            openBoxInativaProjeto: false,
+            openBoxExcluiProjeto: false
         }
     }
 
@@ -138,7 +142,7 @@ class VisualizaProjeto extends React.Component {
         if (AutenticacaoSession.Authorize()) {
             this.GetDadosProjeto();
 
-            fetch('http://' + window.location.hostname + ':5000/api/sgb/edit/project', {
+            fetch('http://' + window.location.hostname + ':5000/api/sgp/edit/project', {
                 method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     "idProjeto": idProjeto, "nome": nome, "descricao": descricao, "dtInicio": dtInicio,
@@ -185,13 +189,61 @@ class VisualizaProjeto extends React.Component {
     }
 
 
+    CloseDialogInativaProjeto = () => {
+        this.setState({ openBoxInativaProjeto: false});
+    }
+
+
+    ConfirmDialogInativaProjeto = () => {
+        this.setState({ openBoxInativaProjeto: false});
+        this.InativaProjeto();
+    }
+
+
     InativaProjeto = () => {
-        //
+        ApiService.ControleProjetoAtivo(idProjeto, INATIVA, tokenRef).then(res => {
+            if (res.status === STATUS_200){
+                PopUp.ExibeMensagem('success', res.message);
+                setTimeout(() => { this.Voltar(); }, 1000);
+            }
+            else if (res.status === STATUS_400)
+                PopUp.ExibeMensagem('info', res.message, 6000);
+            else {
+                PopUp.ExibeMensagem('error', "Não foi possível inativar o projeto");
+                Log.LogError("VisualizaProjeto", "InativaProduto", res.message);
+            }
+        }).catch(err => {
+            PopUp.ExibeMensagem('error', "Não foi possível comunicar com a API");
+            Log.LogError("VisualizaProjeto", "InativaProduto", err.message);
+        });
+    }
+
+
+    CloseDialogExcluiProjeto = () => {
+        this.setState({ openBoxExcluiProjeto: false});
+    }
+
+
+    ConfirmDialogExcluiProjeto = () => {
+        this.setState({ openBoxExcluiProjeto: false});
+        this.ExcluiProjeto();
     }
 
 
     ExcluiProjeto = () => {
-        //
+        ApiService.ExcluiProjeto(idProjeto, tokenRef).then(res => {
+            if (res.status === STATUS_200){
+                PopUp.ExibeMensagem('success', res.message);
+                setTimeout(() => { this.Voltar(); }, 1000);
+            }
+            else {
+                PopUp.ExibeMensagem('error', "Não foi possível excluir o projeto");
+                Log.LogError("VisualizaProjeto", "ExcluiProjeto", res.message);
+            }
+        }).catch(err => {
+            PopUp.ExibeMensagem('error', "Não foi possível comunicar com a API");
+            Log.LogError("VisualizaProjeto", "ExcluiProjeto", err.message);
+        });
     }
 
 
@@ -202,6 +254,11 @@ class VisualizaProjeto extends React.Component {
 
     CloseMenuBar = (action) => {
         this.setState({ anchorEl: null });
+
+        if (action === "Perfil")
+            window.location.href = "AlteraPerfil?Ref=" + tokenRef;
+        else if (action === "TrocaSenha")
+            window.location.href = "AlteraSenha?Ref=" + tokenRef;
     }
 
 
@@ -220,16 +277,31 @@ class VisualizaProjeto extends React.Component {
             <div className="body-visualiza-projeto">
                 <Dialog open={this.state.openDialog} onClose={this.handleClose} aria-labelledby="draggable-dialog-title">
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">Edição!</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            {this.state.dialogText}
-                        </DialogContentText>
-                    </DialogContent>
+                    <DialogContent><DialogContentText>{this.state.dialogText}</DialogContentText></DialogContent>
                     <DialogActions>
                         <Button className="dialog-padrao" onClick={this.handleConfirm} color="primary">Sim</Button>
                         <Button className="dialog-padrao" onClick={this.handleClose} color="primary">Não</Button>
                     </DialogActions>
                 </Dialog>
+
+                <Dialog open={this.state.openBoxInativaProjeto} onClose={this.CloseDialogInativaProjeto} aria-labelledby="draggable-dialog-title">
+                    <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">Aviso!</DialogTitle>
+                    <DialogContent><DialogContentText>Você deseja realmente inativar este projeto?</DialogContentText></DialogContent>
+                    <DialogActions>
+                        <Button className="dialog-padrao" onClick={this.ConfirmDialogInativaProjeto} color="primary">Sim</Button>
+                        <Button className="dialog-padrao" onClick={this.CloseDialogInativaProjeto} color="primary">Não</Button>
+                    </DialogActions>
+                </Dialog>
+
+                <Dialog open={this.state.openBoxExcluiProjeto} onClose={this.CloseDialogExcluiProjeto} aria-labelledby="draggable-dialog-title">
+                    <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">Aviso!</DialogTitle>
+                    <DialogContent><DialogContentText>Você deseja realmente excluir este projeto?</DialogContentText></DialogContent>
+                    <DialogActions>
+                        <Button className="dialog-padrao" onClick={this.ConfirmDialogExcluiProjeto} color="primary">Sim</Button>
+                        <Button className="dialog-padrao" onClick={this.CloseDialogExcluiProjeto} color="primary">Não</Button>
+                    </DialogActions>
+                </Dialog>
+
                 <div className="menu-superior">
                     <AssignmentTurnedInTwoToneIcon className="icons-menu" color="primary" onClick={this.VisualizaAtividades}/>
                     <Button className="buttons-menu" onClick={this.VisualizaAtividades}>Atividades</Button>
@@ -291,8 +363,8 @@ class VisualizaProjeto extends React.Component {
                     </div>
                 </div>
                 <Button id="BtnVoltarProjeto" className="btn-padrao" onClick={this.Voltar}>Voltar</Button>
-                <Button id="BtnInativaProjeto" className="btn-padrao" onClick={this.InativaProjeto}>Inativar</Button>
-                <Button id="BtnExcluiProjeto" className="btn-padrao" onClick={this.ExcluiProjeto}>Excluir</Button>
+                <Button id="BtnInativaProjeto" className="btn-padrao" onClick={() => this.setState({ openBoxInativaProjeto: true })}>Inativar</Button>
+                <Button id="BtnExcluiProjeto" className="btn-padrao" style={{color: 'red'}} onClick={() => this.setState({ openBoxExcluiProjeto: true })}>Excluir</Button>
                 <div id="div-after-end"></div>
             </div>
         )

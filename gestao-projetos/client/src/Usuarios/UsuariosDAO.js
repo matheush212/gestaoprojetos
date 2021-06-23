@@ -67,18 +67,18 @@ class UsuariosDAO {
             let params = [idUsuario]
             instanceDB.get(sql, params, (err, row) => {
                 if (err) {
-                    res.json({ "status": 400, "message": err.message });
+                    res.json({ "status": 404, "message": err.message });
                 }
 
                 if (row != null && row != "") {
                     if (bcrypt.compareSync(senhaAtual, row.Senha))
                         this.AlteraSenha(idUsuario, novaSenha, res);
                     else {
-                        res.json({ "status": 400, "message": "Senha Inválida!" });
+                        res.json({ "status": 400, "message": "Senha atual inválida!" });
                     }
                 }
                 else {
-                    res.json({ "status": 400, "message": "Senha Inválida!" });
+                    res.json({ "status": 400, "message": "Senha atual inválida!" });
                 }
 
             });
@@ -99,7 +99,7 @@ class UsuariosDAO {
             instanceDB.run(sql, [], function (err) {
                 if (err) {
                     res.json({
-                        "status": 400,
+                        "status": 404,
                         "message": "Não foi possível alterar a senha!"
                     });
                 }
@@ -148,7 +148,7 @@ class UsuariosDAO {
     SelectUserPerfil(idUsuario, res) {
         try {
 
-            let sql = `SELECT Nome, Login, Email FROM Usuarios WHERE Id = ${idUsuario}`;
+            let sql = `SELECT Nome, Login FROM Usuarios WHERE Id = ${idUsuario}`;
             instanceDB.get(sql, [], (err, rows) => {
                 res.json(GetJSONDataSQL.ReturnDataJSON(err, rows, 'Usuarios'));
             });
@@ -232,9 +232,9 @@ class UsuariosDAO {
     }
 
 
-    UpdateUserPerfil(idUsuario, nome, login, email, res) {
+    UpdateUserPerfil(idUsuario, nome, login, res) {
         try {
-            let sql = `UPDATE Usuarios SET Nome = '${nome}', Login = '${login}', Email = '${email}' WHERE Id = ${idUsuario}`;
+            let sql = `UPDATE Usuarios SET Nome = '${nome}', Login = '${login}' WHERE Id = ${idUsuario}`;
             instanceDB.run(sql, [], function (err) {
                 if (err) {
                     res.json({ "status": 400, "message": err.message });

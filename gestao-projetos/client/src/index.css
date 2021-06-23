@@ -134,7 +134,7 @@ body {
   width: 8.3em !important;
   padding: 0.7em !important;
   border:0.1em solid rgb(60, 58, 78) !important;
-  color:rgb(60, 58, 78) !important;
+  color:rgb(60, 58, 78);
   text-shadow: 0 0.04em 0.04em rgb(60, 58, 78) !important;
   text-align:center !important;
   transition: all 0.15s !important;
@@ -157,6 +157,11 @@ body {
 
 @media only screen and (max-width: 2000px){#div-after-end{display: none !important; }}
 @media only screen and (max-width: 900px){#div-after-end{display: flex !important; }}
+
+
+@media screen and (max-width: 1370px) { .div-inputs-padrao { margin-top: 1px;}}
+@media screen and (max-width: 1290px) { .div-inputs-padrao { margin-top: 8px;}}
+@media screen and (max-width: 600px) { .div-assist-padrao, .div-inputs-padrao { width: 100%; margin-top: 0; }}
 
 
 code { 
@@ -302,4 +307,23 @@ tbody tr:nth-child(odd){
   padding-top: 0.15em;
   font-size: 90%;
   background-color: green;
+}
+
+
+.filter-fields{
+  width: 90%;
+  margin-left: 5%;
+}
+
+
+.form-control-label{
+  width: 45%; 
+  float: left;
+}
+
+
+.textfield-filters{
+  width: 50%; 
+  float: left;
+  text-align-last: center;
 }

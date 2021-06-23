@@ -38,28 +38,6 @@ class AtividadesController {
     }
 
 
-    GetActivitiesByDate(idProjeto, status, dataDe, dataAte, res) {
-        try {
-            let instaceDAO = new atividadesDAO.AtividadesDAO();
-            instaceDAO.SelectByDate(idProjeto, status, dataDe, dataAte, res);
-        }
-        catch (err) {
-            Log.LogError("AtividadesController", "GetActivitiesByDate", err.message);
-        }
-    }
-
-
-    GetActivitiesByFilter(idProjeto, status, filtro, text, res) {
-        try {
-            let instaceDAO = new atividadesDAO.AtividadesDAO();
-            instaceDAO.SelectByFilter(idProjeto, status, filtro, text, res);
-        }
-        catch (err) {
-            Log.LogError("AtividadesController", "GetActivitiesByFilter", err.message);
-        }
-    }
-
-
     ControleAtividadeAtiva(idAtividade, status, res) {
         try {
             let instaceDAO = new atividadesDAO.AtividadesDAO();
@@ -79,6 +57,28 @@ class AtividadesController {
         }
         catch (err) {
             Log.LogError("AtividadesController", "EditaAtividade", err.message);
+        }
+    }
+
+
+    ControleFiltrosAtividade(idProjeto, filters, res) {
+        try {
+            let instaceDAO = new atividadesDAO.AtividadesDAO();
+            instaceDAO.SelectByFilter(idProjeto, filters, res);
+        }
+        catch (err) {
+            Log.LogError("ProjetosController", "ControleProjetoAtivo", err.message);
+        }
+    }
+
+
+    ExcluiAtividade(idAtividade, res) {
+        try {
+            let instaceDAO = new atividadesDAO.AtividadesDAO();
+            instaceDAO.RemoveAtividade(idAtividade, res);
+        }
+        catch (err) {
+            Log.LogError("AtividadesController", "ExcluiAtividade", err.message);
         }
     }
 }

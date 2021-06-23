@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Autenticacao.css';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -19,8 +19,11 @@ const ENTER = 13;
 const STATUS_200 = 200;
 
 
-const CheckSuccessLogin = (login, paswd) => {
+const CheckSuccessLogin = () => {
     try {
+        let login = document.getElementById("LoginField").value;
+        let paswd = document.getElementById("PasswordField").value;
+
         if (login === "" || paswd === "")
             PopUp.ExibeMensagem('error', "Login Incorreto!");
         else {
@@ -93,9 +96,7 @@ const ViewPassword = () => {
 
 const EnterKeyPressLogin = (event) => {
     if (event.keyCode === ENTER) {
-        let login = document.getElementById("LoginField").value;
-        let passw = document.getElementById("PasswordField").value;
-        CheckSuccessLogin(login, passw);
+        CheckSuccessLogin();
     }
 }
 
@@ -110,6 +111,12 @@ const useStyles = makeStyles((theme) => ({
 
 const ContainerLogin = () => {
     const classes = useStyles();
+
+    useEffect(() => {
+        PopUp.ExibeMensagem("info", "Bem vindo ao sistem de gestão de projetos", 5000);
+        PopUp.ExibeMensagem("info", "Informe o Usuário: 'euax' e senha: 'euax' para entrar!", 8000);
+        PopUp.ExibeMensagem("info", "Muito obrigado e tenha um ótimo dia!", 11000);
+    }, [])
 
     return (
         <div className="autentication-position">

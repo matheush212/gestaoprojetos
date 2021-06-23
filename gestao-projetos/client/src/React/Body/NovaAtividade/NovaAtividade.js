@@ -120,7 +120,7 @@ class NovaAtividade extends React.Component {
         if (AutenticacaoSession.Authorize()) {
             this.GetDadosAtividade();
 
-            fetch('http://' + window.location.hostname + ':5000/api/sgb/new/activity', {
+            fetch('http://' + window.location.hostname + ':5000/api/sgp/new/activity', {
                 method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     "idProjeto": idProjeto, "nome": nome, "descricao": descricao, "dtInicio": dtInicio,
@@ -185,6 +185,11 @@ class NovaAtividade extends React.Component {
 
     CloseMenuBar = (action) => {
         this.setState({ anchorEl: null });
+
+        if (action === "Perfil")
+            window.location.href = "AlteraPerfil?Ref=" + tokenRef;
+        else if (action === "TrocaSenha")
+            window.location.href = "AlteraSenha?Ref=" + tokenRef;
     }
 
 
