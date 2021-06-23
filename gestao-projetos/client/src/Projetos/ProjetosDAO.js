@@ -2,6 +2,7 @@ const singletonDB = require('singleton-db');
 const instanceDB = singletonDB.Instance.getInstance();
 const GetJSONDataSQL = require('../Functions/GetJSONDataSQL');
 const Log = require("../Functions/GeraLog");
+const CalculaPorcentagem = require("../Functions/CalculaPorcentagem");
 const ATIVO = 1;
 
 class ProjetosDAO {
@@ -29,11 +30,57 @@ class ProjetosDAO {
             let sql = `SELECT * FROM Projetos WHERE Id = ${idProjeto} AND Ativo = 1`;
 
             instanceDB.get(sql, [], (err, rows) => {
-                res.json(GetJSONDataSQL.ReturnDataJSON(err, rows, 'Projeto'));
+                if (err)
+                    res.json({ "status": 404, "message": err.message });
+
+                if (rows != null && rows != "")
+                    this.SelectActivities(idProjeto, rows, res);
+                else
+                    res.json({ "status": 400, "message": "Projeto não encontrado!" });
             });
         }
         catch (err) {
             Log.LogError("ProjetosDAO", "SelectByID", err.message);
+        }
+    }
+
+
+    SelectActivities(idProjeto, projectRows, res) {
+        try {
+            let sql = `SELECT Count(Id) as Total, 
+                       (SELECT Count(Id) FROM Atividades WHERE IdProjeto = ${idProjeto} AND Finalizado = 1 AND Ativo = 1) 
+                       as Finalizados
+                       FROM Atividades 
+                       WHERE IdProjeto = ${idProjeto} AND Ativo = 1`;
+
+            instanceDB.get(sql, [], (err, rows) => {
+                if (err)
+                    res.json({ "status": 200, "message": "Projeto editado com sucesso!" });
+                else
+                    this.UdatePercent(idProjeto, projectRows, CalculaPorcentagem.CalculaPorcentagens(rows.Total, rows.Finalizados), res);
+            });
+        }
+        catch (err) {
+            Log.LogError("ProjetosDAO", "SelectActivities", err.message);
+        }
+    }
+
+
+    UdatePercent(idProjeto, rows, porcentagem, res) {
+        try {
+
+            if (Number(porcentagem) == -99)
+                res.json({ "status": 200, "data": rows, "percent": -99 });
+            else {
+                let sql = `UPDATE Projetos SET Porcentagem=${porcentagem} WHERE Id=${idProjeto}`;
+
+                instanceDB.run(sql, [], function (err) {
+                    res.json({ "status": 200, "data": rows, "percent": porcentagem });
+                });
+            }
+        }
+        catch (err) {
+            Log.LogError("ProjetosDAO", "UdatePercent", err.message);
         }
     }
 
@@ -111,15 +158,36 @@ class ProjetosDAO {
             let sql = `UPDATE Projetos SET Nome='${obj.nome}', Descricao='${obj.descricao}', DtInicio='${obj.dtInicio}', DtFinal='${obj.dtFinal}', Finalizado=${obj.finalizado},
                        DtCadastro='${obj.dtCadastro}' WHERE Id=${obj.id}`;
 
-            instanceDB.run(sql, [], function (err) {
+            instanceDB.run(sql, [], (err) => {
                 if (err)
                     res.json({ "status": 400, "message": err.message });
                 else
-                    res.json({ "status": 200, "message": "Projeto editado com sucesso!" });
+                    this.SelectCountAtividades(obj.id, res);
             });
         }
         catch (err) {
             Log.LogError("ProjetosDAO", "EditProject", err.message);
+        }
+    }
+
+
+    SelectCountAtividades(idProjeto, res) {
+        try {
+            let sql = `SELECT Count(Id) as Total, 
+                       (SELECT Count(Id) FROM Atividades WHERE IdProjeto = ${idProjeto} AND Finalizado = 1 AND Ativo = 1) 
+                       as Finalizados
+                       FROM Atividades 
+                       WHERE IdProjeto = ${idProjeto} AND Ativo = 1`;
+
+            instanceDB.get(sql, [], (err, rows) => {
+                if (err)
+                    res.json({ "status": 200, "message": "Projeto editado com sucesso!" });
+                else
+                    this.AtualizaPorcentegem(idProjeto, CalculaPorcentagem.CalculaPorcentagens(rows.Total, rows.Finalizados), res);
+            });
+        }
+        catch (err) {
+            Log.LogError("ProjetosDAO", "SelectCountAtividades", err.message);
         }
     }
 
@@ -133,12 +201,12 @@ class ProjetosDAO {
                 let sql = `UPDATE Projetos SET Porcentagem=${porcentagem} WHERE Id=${idProjeto}`;
 
                 instanceDB.run(sql, [], function (err) {
-                    res.json({ "status": 200, "message": "Atividade editada com sucesso!" });
+                    res.json({ "status": 200, "message": "Projeto editado com sucesso!" });
                 });
             }
         }
         catch (err) {
-            Log.LogError("AtividadesDAO", "EditActivity", err.message);
+            Log.LogError("ProjetosDAO", "AtualizaPorcentegem", err.message);
         }
     }
 

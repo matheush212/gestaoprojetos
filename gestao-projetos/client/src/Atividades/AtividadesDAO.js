@@ -33,11 +33,36 @@ class AtividadesDAO {
                        WHERE Atividades.Id = ${idAtividade} AND Atividades.Ativo = 1`;
 
             instanceDB.get(sql, [], (err, rows) => {
-                res.json(GetJSONDataSQL.ReturnDataJSON(err, rows, 'Atividade'));
+                if (err)
+                    res.json({ "status": 404, "message": err.message });
+
+                if (rows != null && rows != "")
+                    this.UpdatePercent(idAtividade, rows, CalculaPorcentagem.GetDiferencaEmDias(rows.DtInicio, rows.DtFinal), res);
+                else
+                    res.json({ "status": 400, "message": "Atividade não encontrada!"});
             });
         }
         catch (err) {
             Log.LogError("AtividadesDAO", "SelectByID", err.message);
+        }
+    }
+    
+
+    UpdatePercent(idAtividade, rows, porcentagem, res) {
+        try {
+
+            if (Number(porcentagem) == -99)
+                res.json({ "status": 200, "data": rows, "percent": -99 });
+            else {
+                let sql = `UPDATE Atividades SET Porcentagem=${porcentagem} WHERE Id=${idAtividade}`;
+
+                instanceDB.run(sql, [], function (err) {
+                    res.json({ "status": 200, "data": rows, "percent": porcentagem });
+                });
+            }
+        }
+        catch (err) {
+            Log.LogError("AtividadesDAO", "UpdatePercent", err.message);
         }
     }
 

@@ -55,7 +55,7 @@ class VisualizaProjeto extends React.Component {
     GetProjectByID = () => {
         ApiService.ProjectByID(idProjeto, tokenRef).then(res => {
             if (res.status === STATUS_200)
-                this.PreencheDadosProjeto(res.data);
+                this.PreencheDadosProjeto(res.data, res.percent);
             else {
                 PopUp.ExibeMensagem('error', "Não foi possível encontrar o projeto");
                 Log.LogError("VisualizaProjeto", "GetProjectByID", res.message);
@@ -67,14 +67,22 @@ class VisualizaProjeto extends React.Component {
     }
 
 
-    PreencheDadosProjeto = (dados) => {
+    PreencheDadosProjeto = (dados, percent) => {
+        console.log(percent);
         document.getElementById("NomeProjetoEdit").value = dados.Nome;
         document.getElementById("DescProjetoEdit").value = dados.Descricao;
         document.getElementById("DtInicioProjetoEdit").value = dados.DtInicio;
         document.getElementById("DtFinalProjetoEdit").value = dados.DtFinal;
         document.getElementById("DtCadastroEdit").value = dados.DtCadastro;
-        document.getElementById("barProgressLine").style.width = dados.Porcentagem + "%";
-        document.getElementById("barProgressLine").innerHTML = dados.Porcentagem + "% Concluído";
+
+        if (Number(percent !== -99)) {
+            document.getElementById("barProgressLine").style.width = percent + "%";
+            document.getElementById("barProgressLine").innerHTML = percent + "%";
+        }
+        else{
+            document.getElementById("barProgressLine").style.width = dados.Porcentagem + "%";
+            document.getElementById("barProgressLine").innerHTML = dados.Porcentagem + "%";
+        }
 
         if (Number(dados.Atrasado === 0))
             document.getElementById("AtrasadoEdit").value = "Não";
@@ -149,8 +157,10 @@ class VisualizaProjeto extends React.Component {
                     "dtFinal": dtFinal, "finalizado": finalizado, "dtCadastro": dtCadastro, "token": tokenRef,
                 })
             }).then((response) => response.json()).then((res) => {
-                if (res.status === 200)
+                if (res.status === 200) {
                     PopUp.ExibeMensagem('success', res.message);
+                    this.GetProjectByID();
+                }
                 else {
                     PopUp.ExibeMensagem('error', "Não foi possível editar o Projeto!");
                     Log.LogError("VisualizaProjeto", "EditaProjeto", res.message);
@@ -190,19 +200,19 @@ class VisualizaProjeto extends React.Component {
 
 
     CloseDialogInativaProjeto = () => {
-        this.setState({ openBoxInativaProjeto: false});
+        this.setState({ openBoxInativaProjeto: false });
     }
 
 
     ConfirmDialogInativaProjeto = () => {
-        this.setState({ openBoxInativaProjeto: false});
+        this.setState({ openBoxInativaProjeto: false });
         this.InativaProjeto();
     }
 
 
     InativaProjeto = () => {
         ApiService.ControleProjetoAtivo(idProjeto, INATIVA, tokenRef).then(res => {
-            if (res.status === STATUS_200){
+            if (res.status === STATUS_200) {
                 PopUp.ExibeMensagem('success', res.message);
                 setTimeout(() => { this.Voltar(); }, 1000);
             }
@@ -220,19 +230,19 @@ class VisualizaProjeto extends React.Component {
 
 
     CloseDialogExcluiProjeto = () => {
-        this.setState({ openBoxExcluiProjeto: false});
+        this.setState({ openBoxExcluiProjeto: false });
     }
 
 
     ConfirmDialogExcluiProjeto = () => {
-        this.setState({ openBoxExcluiProjeto: false});
+        this.setState({ openBoxExcluiProjeto: false });
         this.ExcluiProjeto();
     }
 
 
     ExcluiProjeto = () => {
         ApiService.ExcluiProjeto(idProjeto, tokenRef).then(res => {
-            if (res.status === STATUS_200){
+            if (res.status === STATUS_200) {
                 PopUp.ExibeMensagem('success', res.message);
                 setTimeout(() => { this.Voltar(); }, 1000);
             }
@@ -303,7 +313,7 @@ class VisualizaProjeto extends React.Component {
                 </Dialog>
 
                 <div className="menu-superior">
-                    <AssignmentTurnedInTwoToneIcon className="icons-menu" color="primary" onClick={this.VisualizaAtividades}/>
+                    <AssignmentTurnedInTwoToneIcon className="icons-menu" color="primary" onClick={this.VisualizaAtividades} />
                     <Button className="buttons-menu" onClick={this.VisualizaAtividades}>Atividades</Button>
                     <AccountTreeTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" onClick={this.GoToMeusProjetos} />
                     <Button className="buttons-menu" onClick={this.GoToMeusProjetos}>Meus Projetos</Button>
@@ -364,7 +374,7 @@ class VisualizaProjeto extends React.Component {
                 </div>
                 <Button id="BtnVoltarProjeto" className="btn-padrao" onClick={this.Voltar}>Voltar</Button>
                 <Button id="BtnInativaProjeto" className="btn-padrao" onClick={() => this.setState({ openBoxInativaProjeto: true })}>Inativar</Button>
-                <Button id="BtnExcluiProjeto" className="btn-padrao" style={{color: 'red'}} onClick={() => this.setState({ openBoxExcluiProjeto: true })}>Excluir</Button>
+                <Button id="BtnExcluiProjeto" className="btn-padrao" style={{ color: 'red' }} onClick={() => this.setState({ openBoxExcluiProjeto: true })}>Excluir</Button>
                 <div id="div-after-end"></div>
             </div>
         )

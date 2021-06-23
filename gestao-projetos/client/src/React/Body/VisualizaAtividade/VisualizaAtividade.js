@@ -77,7 +77,7 @@ class VisualizaAtividade extends React.Component {
     GetActivityByID = () => {
         ApiService.ActivityByID(idAtividade, tokenRef).then(res => {
             if (res.status === STATUS_200)
-                this.PreencheDadosAtividade(res.data);
+                this.PreencheDadosAtividade(res.data, res.percent);
             else {
                 PopUp.ExibeMensagem('error', "Não foi possível encontrar a atividade");
                 Log.LogError("VisualizaAtividade", "GetActivityByID", res.message);
@@ -89,15 +89,22 @@ class VisualizaAtividade extends React.Component {
     }
 
 
-    PreencheDadosAtividade = (dados) => {
+    PreencheDadosAtividade = (dados, percent) => {
         document.getElementById("TipoProjetoEdit").value = dados.NomeProjeto;
         document.getElementById("NomeAtividadeEdit").value = dados.Nome;
         document.getElementById("DescAtividadeEdit").value = dados.Descricao;
         document.getElementById("DtInicioAtividadeEdit").value = dados.DtInicio;
         document.getElementById("DtFinalAtividadeEdit").value = dados.DtFinal;
         document.getElementById("DtCadastroAtividadeEdit").value = dados.DtCadastro;
-        document.getElementById("barProgressLine").style.width = dados.Porcentagem + "%";
-        document.getElementById("barProgressLine").innerHTML = dados.Porcentagem + "% Concluído";
+
+        if (Number(percent !== -99)) {
+            document.getElementById("barProgressLine").style.width = percent + "%";
+            document.getElementById("barProgressLine").innerHTML = percent + "%";
+        }
+        else{
+            document.getElementById("barProgressLine").style.width = dados.Porcentagem + "%";
+            document.getElementById("barProgressLine").innerHTML = dados.Porcentagem + "%";
+        }
 
         if (Number(dados.Atrasado === 0))
             document.getElementById("AtividadeAtrasadaEdit").value = "Não";
@@ -172,8 +179,10 @@ class VisualizaAtividade extends React.Component {
                     "dtFinal": dtFinal, "finalizado": finalizado, "dtCadastro": dtCadastro, "token": tokenRef,
                 })
             }).then((response) => response.json()).then((res) => {
-                if (res.status === STATUS_200)
+                if (res.status === STATUS_200) {
                     PopUp.ExibeMensagem('success', res.message);
+                    this.GetActivityByID();
+                }
                 else {
                     PopUp.ExibeMensagem('error', "Não foi possível editar o Projeto!");
                     Log.LogError("VisualizaAtividade", "EditaAtividade", res.message);
@@ -209,21 +218,21 @@ class VisualizaAtividade extends React.Component {
         }
     }
 
-    
+
     CloseDialogInativaAtividade = () => {
-        this.setState({ openBoxInativaAtividade: false});
+        this.setState({ openBoxInativaAtividade: false });
     }
 
 
     ConfirmDialogInativaAtividade = () => {
-        this.setState({ openBoxInativaAtividade: false});
+        this.setState({ openBoxInativaAtividade: false });
         this.InativaAtividade();
     }
 
 
     InativaAtividade = () => {
         ApiService.ControleAtividadeAtiva(idAtividade, INATIVA, tokenRef).then(res => {
-            if (res.status === STATUS_200){
+            if (res.status === STATUS_200) {
                 PopUp.ExibeMensagem('success', res.message);
                 setTimeout(() => { this.Voltar(); }, 1000);
             }
@@ -241,19 +250,19 @@ class VisualizaAtividade extends React.Component {
 
 
     CloseDialogExcluiAtividade = () => {
-        this.setState({ openBoxExcluiAtividade: false});
+        this.setState({ openBoxExcluiAtividade: false });
     }
 
 
     ConfirmDialogExcluiAtividade = () => {
-        this.setState({ openBoxExcluiAtividade: false});
+        this.setState({ openBoxExcluiAtividade: false });
         this.ExcluiAtividade();
     }
 
 
     ExcluiAtividade = () => {
         ApiService.ExcluiAtividade(idAtividade, tokenRef).then(res => {
-            if (res.status === STATUS_200){
+            if (res.status === STATUS_200) {
                 PopUp.ExibeMensagem('success', res.message);
                 setTimeout(() => { this.Voltar(); }, 1000);
             }
@@ -394,7 +403,7 @@ class VisualizaAtividade extends React.Component {
                 </div>
                 <Button id="BtnVoltarAtividade" className="btn-padrao" onClick={this.Voltar}>Voltar</Button>
                 <Button id="BtnInativaAtividade" className="btn-padrao" onClick={() => this.setState({ openBoxInativaAtividade: true })}>Inativar</Button>
-                <Button id="BtnExcluiAtividade" className="btn-padrao" style={{color: 'red'}} onClick={() => this.setState({ openBoxExcluiAtividade: true })}>Excluir</Button>
+                <Button id="BtnExcluiAtividade" className="btn-padrao" style={{ color: 'red' }} onClick={() => this.setState({ openBoxExcluiAtividade: true })}>Excluir</Button>
                 <div id="div-after-end"></div>
             </div>
         )

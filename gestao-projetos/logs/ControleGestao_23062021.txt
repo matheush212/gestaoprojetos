@@ -270,3 +270,27 @@
 
 23/06/2021 17:51:07 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
 
+23/06/2021 18:49:46 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+23/06/2021 18:49:46 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+23/06/2021 18:51:23 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+23/06/2021 18:51:23 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+23/06/2021 18:51:29 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+23/06/2021 18:51:29 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+23/06/2021 18:51:29 -> Tela: VisualizaProjeto - Função: GetProjectByID - Erro: Autorização negada!
+
+23/06/2021 18:52:08 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+23/06/2021 18:52:08 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+23/06/2021 20:29:10 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+23/06/2021 20:29:10 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+23/06/2021 20:29:10 -> Tela: VisualizaProjeto - Função: GetProjectByID - Erro: Autorização negada!
+
