@@ -18,6 +18,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { ClearField, ConfigControl } from '../../../Functions/ConfigTextFieldList';
 import StyleControl from '../../../Functions/ControleCSSBotoes';
+import CalculaPorcentagem from '../../../Functions/CalculaPorcentagem';
 import AutenticacaoSession from '../../../Autenticacao/AutenticacaoSession';
 import Log from '../../../Functions/GeraLog';
 let idProjeto = '', nome = '', descricao = '', dtInicio = '', dtFinal = '', finalizado = '', dtCadastro = '';

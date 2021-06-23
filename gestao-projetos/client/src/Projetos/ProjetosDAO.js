@@ -124,6 +124,25 @@ class ProjetosDAO {
     }
 
 
+    AtualizaPorcentegem(idProjeto, porcentagem, res) {
+        try {
+
+            if (Number(porcentagem) == -99)
+                res.json({ "status": 200, "message": "Projeto editado com sucesso!" });
+            else {
+                let sql = `UPDATE Projetos SET Porcentagem=${porcentagem} WHERE Id=${idProjeto}`;
+
+                instanceDB.run(sql, [], function (err) {
+                    res.json({ "status": 200, "message": "Atividade editada com sucesso!" });
+                });
+            }
+        }
+        catch (err) {
+            Log.LogError("AtividadesDAO", "EditActivity", err.message);
+        }
+    }
+
+
     RemoveAtividade(idProjeto, res) {
         try {
             let sql = `DELETE FROM Atividades WHERE IdProjeto=${idProjeto}`;

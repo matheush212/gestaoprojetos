@@ -2,6 +2,7 @@ const singletonDB = require('singleton-db');
 const instanceDB = singletonDB.Instance.getInstance();
 const GetJSONDataSQL = require('../Functions/GetJSONDataSQL');
 const Log = require("../Functions/GeraLog");
+const CalculaPorcentagem = require("../Functions/CalculaPorcentagem");
 const ATIVO = 1;
 
 class AtividadesDAO {
@@ -118,12 +119,31 @@ class AtividadesDAO {
             let sql = `UPDATE Atividades SET IdProjeto=${obj.idProjeto}, Nome='${obj.nome}', Descricao='${obj.descricao}', DtInicio='${obj.dtInicio}', DtFinal='${obj.dtFinal}', Finalizado=${obj.finalizado},
                        DtCadastro='${obj.dtCadastro}' WHERE Id=${obj.id}`;
 
-            instanceDB.run(sql, [], function (err) {
+            instanceDB.run(sql, [], (err) => {
                 if (err)
                     res.json({ "status": 400, "message": err.message });
                 else
-                    res.json({ "status": 200, "message": "Atividade editada com sucesso!" });
+                    this.AtualizaPorcentegem(obj.id, CalculaPorcentagem.GetDiferencaEmDias(obj.dtInicio, obj.dtFinal), res);
             });
+        }
+        catch (err) {
+            Log.LogError("AtividadesDAO", "EditActivity", err.message);
+        }
+    }
+
+
+    AtualizaPorcentegem(idAtividade, porcentagem, res) {
+        try {
+
+            if (Number(porcentagem) == -99)
+                res.json({ "status": 200, "message": "Atividade editada com sucesso!" });
+            else {
+                let sql = `UPDATE Atividades SET Porcentagem=${porcentagem} WHERE Id=${idAtividade}`;
+
+                instanceDB.run(sql, [], function (err) {
+                    res.json({ "status": 200, "message": "Atividade editada com sucesso!" });
+                });
+            }
         }
         catch (err) {
             Log.LogError("AtividadesDAO", "EditActivity", err.message);
