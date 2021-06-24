@@ -116,7 +116,7 @@ const ContainerLogin = () => {
         PopUp.ExibeMensagem("info", "Bem vindo ao sistem de gestão de projetos", 5000);
         PopUp.ExibeMensagem("info", "Informe o Usuário: 'euax' e senha: 'euax' para entrar!", 8000);
         PopUp.ExibeMensagem("info", "Muito obrigado e tenha um ótimo dia!", 11000);
-    }, [])
+    }, []);
 
     return (
         <div className="autentication-position">

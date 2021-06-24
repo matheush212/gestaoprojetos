@@ -37,7 +37,7 @@ exports.Authorize = async () => {
     }
     catch (err) {
         Log.LogError("AutenticacaoSession", "Authorize", err.message);
-        return false; //Retorna false, pois se cair no catch, significa que o token expirou
+        return false;
     }
 }
 
@@ -59,6 +59,6 @@ async function GetAccess() {
     }
     catch (err) {
         Log.LogError("AutenticacaoSession", "GetAccess", err.message);
-        return null; 
+        return null;
     }
 }

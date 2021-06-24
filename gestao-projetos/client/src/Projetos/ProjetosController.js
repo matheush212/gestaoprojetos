@@ -83,7 +83,7 @@ class ProjetosController {
     }
 
 
-    GetInformacoes(res){
+    GetInformacoes(res) {
         try {
             let instaceDAO = new projetosDAO.ProjetosDAO();
             instaceDAO.SelectInfo(res);

@@ -10,10 +10,8 @@ function LogError(screen, functionName, message) {
             "functionName": functionName,
             "message": message
         })
+    }).then((response) => response.json()).then((res) => {
+        //
     })
-        .then((response) => response.json())
-        .then((res) => {
-            //
-        })
 }
 exports.LogError = LogError;

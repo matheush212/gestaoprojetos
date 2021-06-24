@@ -67,7 +67,7 @@ class AtividadesController {
             instaceDAO.SelectByFilter(idProjeto, filters, res);
         }
         catch (err) {
-            Log.LogError("ProjetosController", "ControleProjetoAtivo", err.message);
+            Log.LogError("AtividadesController", "ControleFiltrosAtividade", err.message);
         }
     }
 
