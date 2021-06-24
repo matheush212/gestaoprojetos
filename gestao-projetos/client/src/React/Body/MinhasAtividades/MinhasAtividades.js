@@ -16,8 +16,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
-import HourglassFullTwoToneIcon from '@material-ui/icons/HourglassFullTwoTone';
-import AssessmentTwoToneIcon from '@material-ui/icons/AssessmentTwoTone';
+import InfoTwoToneIcon from '@material-ui/icons/InfoTwoTone';
 import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
 import AccountTreeTwoToneIcon from '@material-ui/icons/AccountTreeTwoTone';
 import PrintIcon from '../../../React/Images/PrintIcon.png';
@@ -210,6 +209,11 @@ class MinhasAtividades extends React.Component {
     }
 
 
+    GoToInformacoes = () => {
+        window.location.href = "Informacoes?Ref=" + tokenRef;
+    }
+
+
     Voltar = () => {
         window.location.href = "VisualizaProjeto?Ref=" + tokenRef + "&IdProjeto=" + idProjeto;
     }
@@ -223,10 +227,8 @@ class MinhasAtividades extends React.Component {
                     <Button className="buttons-menu" onClick={this.NovaAtividade}>Nova Atividade</Button>
                     <AccountTreeTwoToneIcon className="icons-menu" color="primary" onClick={this.GoToMeusProjetos} />
                     <Button className="buttons-menu" onClick={this.GoToMeusProjetos}>Meus Projetos</Button>
-                    <HourglassFullTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
-                    <Button className="buttons-menu" >Tempo Gasto Geral</Button>
-                    <AssessmentTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
-                    <Button className="buttons-menu">Gráficos</Button>
+                    <InfoTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" onClick={this.GoToInformacoes}/>
+                    <Button className="buttons-menu" onClick={this.GoToInformacoes}>Informações Gerais</Button>
                     <SearchTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" onClick={() => this.setState({ openBoxFiltersAtividade: true })} />
                     <Button className="buttons-menu" onClick={() => this.setState({ openBoxFiltersAtividade: true })}>Filtros</Button>
                     <div className="box-perfil" aria-controls="simple-menu" aria-haspopup="true" onMouseOver={this.OpenMenuBar}>E</div>

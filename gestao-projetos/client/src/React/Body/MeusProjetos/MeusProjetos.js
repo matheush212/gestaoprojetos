@@ -15,8 +15,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
-import HourglassFullTwoToneIcon from '@material-ui/icons/HourglassFullTwoTone';
-import AssessmentTwoToneIcon from '@material-ui/icons/AssessmentTwoTone';
+import InfoTwoToneIcon from '@material-ui/icons/InfoTwoTone';
 import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
 import DestroySession from '../../../Functions/DestroySession';
 import Menu from '@material-ui/core/Menu';
@@ -65,7 +64,7 @@ class MeusProjetos extends React.Component {
             { id: "DataInicio", label: 'Dt. Inicial', minWidth: 80, align: 'center' },
             { id: "DataFinal", label: 'Dt. Final', minWidth: 80, align: 'center' },
             { id: "Porcentagem", label: '% Completo', minWidth: 50, align: 'center' },
-            { id: "Atrasado", label: 'Atrasado?', minWidth: 60, align: 'center' },
+            { id: "Atrasado", label: 'Vai Atrasar?', minWidth: 60, align: 'center' },
             { id: "Finalizado", label: 'Finalizado?', minWidth: 60, align: 'center' },
             { id: "DataCadastro", label: 'Dt. Cadastro?', minWidth: 80, align: 'center' },
             { id: "Ativo", label: 'Ativo?', minWidth: 60, align: 'center' },
@@ -222,16 +221,19 @@ class MeusProjetos extends React.Component {
     }
 
 
+    GoToInformacoes = () => {
+        window.location.href = "Informacoes?Ref=" + tokenRef;
+    }
+
+
     render() {
         return (
             <div className="body-table-projetos">
                 <div className="menu-superior">
                     <AddCircleTwoToneIcon className="icons-menu" color="primary" onClick={this.NovoProjeto} />
                     <Button className="buttons-menu" onClick={this.NovoProjeto}>Novo Projeto</Button>
-                    <HourglassFullTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
-                    <Button className="buttons-menu" >Tempo Gasto Geral</Button>
-                    <AssessmentTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
-                    <Button className="buttons-menu">Gráficos</Button>
+                    <InfoTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" onClick={this.GoToInformacoes}/>
+                    <Button className="buttons-menu" onClick={this.GoToInformacoes}>Informações Gerais</Button>
                     <SearchTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" onClick={() => this.setState({ openBoxFiltersProjeto: true })} />
                     <Button className="buttons-menu" onClick={() => this.setState({ openBoxFiltersProjeto: true })}>Filtros</Button>
                     <div className="box-perfil" aria-controls="simple-menu" aria-haspopup="true" onMouseOver={this.OpenMenuBar}>E</div>

@@ -12,8 +12,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import UrlParam from '../../../Functions/GetUrlParameters';
 import AccountTreeTwoToneIcon from '@material-ui/icons/AccountTreeTwoTone';
-import HourglassFullTwoToneIcon from '@material-ui/icons/HourglassFullTwoTone';
-import AssessmentTwoToneIcon from '@material-ui/icons/AssessmentTwoTone';
+import InfoTwoToneIcon from '@material-ui/icons/InfoTwoTone';
 import AssignmentTurnedInTwoToneIcon from '@material-ui/icons/AssignmentTurnedInTwoTone';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -27,6 +26,7 @@ let idProjeto = UrlParam.queryString("IdProjeto");
 const STATUS_200 = 200;
 const STATUS_400 = 400;
 const INATIVA = 0;
+const COD_ERRO = -99;
 
 
 class VisualizaProjeto extends React.Component {
@@ -55,7 +55,9 @@ class VisualizaProjeto extends React.Component {
     GetProjectByID = () => {
         ApiService.ProjectByID(idProjeto, tokenRef).then(res => {
             if (res.status === STATUS_200)
-                this.PreencheDadosProjeto(res.data, res.percent);
+                this.PreencheDadosProjeto(res.data, res.percent, res.atrasado);
+            else if (res.status === STATUS_400)
+                PopUp.ExibeMensagem('info', res.message);
             else {
                 PopUp.ExibeMensagem('error', "Não foi possível encontrar o projeto");
                 Log.LogError("VisualizaProjeto", "GetProjectByID", res.message);
@@ -67,30 +69,37 @@ class VisualizaProjeto extends React.Component {
     }
 
 
-    PreencheDadosProjeto = (dados, percent) => {
-        console.log(percent);
+    PreencheDadosProjeto = (dados, percent, atrasado) => {
+        console.log(percent, atrasado);
         document.getElementById("NomeProjetoEdit").value = dados.Nome;
         document.getElementById("DescProjetoEdit").value = dados.Descricao;
         document.getElementById("DtInicioProjetoEdit").value = dados.DtInicio;
         document.getElementById("DtFinalProjetoEdit").value = dados.DtFinal;
         document.getElementById("DtCadastroEdit").value = dados.DtCadastro;
 
-        if (Number(percent !== -99)) {
+        if (Number(percent) !== COD_ERRO) {
             document.getElementById("barProgressLine").style.width = percent + "%";
             document.getElementById("barProgressLine").innerHTML = percent + "%";
         }
-        else{
+        else {
             document.getElementById("barProgressLine").style.width = dados.Porcentagem + "%";
             document.getElementById("barProgressLine").innerHTML = dados.Porcentagem + "%";
         }
 
-        if (Number(dados.Atrasado === 0))
-            document.getElementById("AtrasadoEdit").value = "Não";
-        else
-            document.getElementById("AtrasadoEdit").value = "Sim";
+        if (Number(atrasado) !== COD_ERRO) {
+            if (Number(atrasado) === 0)
+                document.getElementById("AtrasadoEdit").value = "Não";
+            else
+                document.getElementById("AtrasadoEdit").value = "Sim";
+        }
+        else {
+            if (Number(dados.Atrasado) === 0)
+                document.getElementById("AtrasadoEdit").value = "Não";
+            else
+                document.getElementById("AtrasadoEdit").value = "Sim";
+        }
 
-
-        if (Number(dados.Finalizado === 0))
+        if (Number(dados.Finalizado) === 0)
             document.getElementById("FinalizadoEdit").value = "Não";
         else
             document.getElementById("FinalizadoEdit").value = "Sim";
@@ -277,6 +286,11 @@ class VisualizaProjeto extends React.Component {
     }
 
 
+    GoToInformacoes = () => {
+        window.location.href = "Informacoes?Ref=" + tokenRef;
+    }
+
+
     Voltar = () => {
         window.location.href = "MeusProjetos?Ref=" + tokenRef;
     }
@@ -317,10 +331,8 @@ class VisualizaProjeto extends React.Component {
                     <Button className="buttons-menu" onClick={this.VisualizaAtividades}>Atividades</Button>
                     <AccountTreeTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" onClick={this.GoToMeusProjetos} />
                     <Button className="buttons-menu" onClick={this.GoToMeusProjetos}>Meus Projetos</Button>
-                    <HourglassFullTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
-                    <Button className="buttons-menu">Tempo Gasto Geral</Button>
-                    <AssessmentTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
-                    <Button className="buttons-menu">Gráficos</Button>
+                    <InfoTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" onClick={this.GoToInformacoes}/>
+                    <Button className="buttons-menu" onClick={this.GoToInformacoes}>Informações Gerais</Button>
                     <div className="box-perfil" aria-controls="simple-menu" aria-haspopup="true" onMouseOver={this.OpenMenuBar}>E</div>
                     <Menu id="simple-menu" anchorEl={this.state.anchorEl} keepMounted open={Boolean(this.state.anchorEl)} onClose={this.CloseMenuBar}>
                         <div className="user-info">Euax</div>
@@ -350,7 +362,7 @@ class VisualizaProjeto extends React.Component {
                                 <div id="divProgressProducao">
                                     <div id="barProgressLine"></div>
                                 </div>
-                                <TextField type="text" helperText="Atrasado?" inputProps={{ readOnly: true }} id="AtrasadoEdit" style={{ marginLeft: '10%' }} className="half-inputs-padrao" />
+                                <TextField type="text" helperText="Vai Atrasar?" inputProps={{ readOnly: true }} id="AtrasadoEdit" style={{ marginLeft: '10%' }} className="half-inputs-padrao" />
                             </div>
                         </div>
                         <div className="row">

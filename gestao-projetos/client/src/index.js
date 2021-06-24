@@ -11,6 +11,7 @@ import VisualizaAtividade from './React/Pages/VisualizaAtividade/VisualizaAtivid
 import NovaAtividade from './React/Pages/NovaAtividade/NovaAtividade';
 import AlteraPerfil from './React/Pages/AlteraPerfil/AlteraPerfil';
 import AlteraSenha from './React/Pages/AlteraSenha/AlteraSenha';
+import Informacoes from './React/Pages/Informacoes/Informacoes';
 
 import NotAuthenticated from './React/Pages/NotAuthenticated/NotAuthenticated';
 import NotFound from './React/Pages/NotFound/NotFound';
@@ -70,6 +71,7 @@ ReactDOM.render(
       <PrivateRoute path="/NovaAtividade" component={NovaAtividade} />
       <PrivateRoute path="/AlteraPerfil" component={AlteraPerfil} />
       <PrivateRoute path="/AlteraSenha" component={AlteraSenha} />
+      <PrivateRoute path="/Informacoes" component={Informacoes} />
       <Route path="/NotAuthenticated" component={NotAuthenticated} />
       <Route component={NotFound} />
     </Switch>

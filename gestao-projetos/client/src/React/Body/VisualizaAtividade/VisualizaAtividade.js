@@ -12,13 +12,11 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import UrlParam from '../../../Functions/GetUrlParameters';
 import AccountTreeTwoToneIcon from '@material-ui/icons/AccountTreeTwoTone';
-import HourglassFullTwoToneIcon from '@material-ui/icons/HourglassFullTwoTone';
-import AssessmentTwoToneIcon from '@material-ui/icons/AssessmentTwoTone';
+import InfoTwoToneIcon from '@material-ui/icons/InfoTwoTone';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { ClearField, ConfigControl } from '../../../Functions/ConfigTextFieldList';
 import StyleControl from '../../../Functions/ControleCSSBotoes';
-import CalculaPorcentagem from '../../../Functions/CalculaPorcentagem';
 import AutenticacaoSession from '../../../Autenticacao/AutenticacaoSession';
 import Log from '../../../Functions/GeraLog';
 let idProjeto = '', nome = '', descricao = '', dtInicio = '', dtFinal = '', finalizado = '', dtCadastro = '';
@@ -29,7 +27,7 @@ const STATUS_200 = 200;
 const STATUS_400 = 400;
 const ATIVOS = 1;
 const INATIVA = 0;
-
+const COD_ERRO = -99;
 
 class VisualizaAtividade extends React.Component {
     constructor(props) {
@@ -77,7 +75,9 @@ class VisualizaAtividade extends React.Component {
     GetActivityByID = () => {
         ApiService.ActivityByID(idAtividade, tokenRef).then(res => {
             if (res.status === STATUS_200)
-                this.PreencheDadosAtividade(res.data, res.percent);
+                this.PreencheDadosAtividade(res.data, res.percent, res.atrasado);
+            else if (res.status === STATUS_400)
+                PopUp.ExibeMensagem('info', res.message);
             else {
                 PopUp.ExibeMensagem('error', "Não foi possível encontrar a atividade");
                 Log.LogError("VisualizaAtividade", "GetActivityByID", res.message);
@@ -89,7 +89,7 @@ class VisualizaAtividade extends React.Component {
     }
 
 
-    PreencheDadosAtividade = (dados, percent) => {
+    PreencheDadosAtividade = (dados, percent, atrasado) => {
         document.getElementById("TipoProjetoEdit").value = dados.NomeProjeto;
         document.getElementById("NomeAtividadeEdit").value = dados.Nome;
         document.getElementById("DescAtividadeEdit").value = dados.Descricao;
@@ -97,19 +97,28 @@ class VisualizaAtividade extends React.Component {
         document.getElementById("DtFinalAtividadeEdit").value = dados.DtFinal;
         document.getElementById("DtCadastroAtividadeEdit").value = dados.DtCadastro;
 
-        if (Number(percent !== -99)) {
+        if (Number(percent !== COD_ERRO)) {
             document.getElementById("barProgressLine").style.width = percent + "%";
             document.getElementById("barProgressLine").innerHTML = percent + "%";
         }
-        else{
+        else {
             document.getElementById("barProgressLine").style.width = dados.Porcentagem + "%";
             document.getElementById("barProgressLine").innerHTML = dados.Porcentagem + "%";
         }
 
-        if (Number(dados.Atrasado === 0))
-            document.getElementById("AtividadeAtrasadaEdit").value = "Não";
-        else
-            document.getElementById("AtividadeAtrasadaEdit").value = "Sim";
+
+        if (Number(atrasado) !== COD_ERRO) {
+            if (Number(atrasado) === 0)
+                document.getElementById("AtividadeAtrasadaEdit").value = "Não";
+            else
+                document.getElementById("AtividadeAtrasadaEdit").value = "Sim";
+        }
+        else {
+            if (Number(dados.Atrasado) === 0)
+                document.getElementById("AtividadeAtrasadaEdit").value = "Não";
+            else
+                document.getElementById("AtividadeAtrasadaEdit").value = "Sim";
+        }
 
 
         if (Number(dados.Finalizado === 0))
@@ -297,6 +306,11 @@ class VisualizaAtividade extends React.Component {
     }
 
 
+    GoToInformacoes = () => {
+        window.location.href = "Informacoes?Ref=" + tokenRef;
+    }
+
+
     Voltar = () => {
         window.location.href = "MinhasAtividades?Ref=" + tokenRef + "&IdProjeto=" + projectID;
     }
@@ -335,10 +349,8 @@ class VisualizaAtividade extends React.Component {
                 <div className="menu-superior">
                     <AccountTreeTwoToneIcon className="icons-menu" color="primary" onClick={this.GoToMeusProjetos} />
                     <Button className="buttons-menu" onClick={this.GoToMeusProjetos}>Meus Projetos</Button>
-                    <HourglassFullTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
-                    <Button className="buttons-menu">Tempo Gasto Geral</Button>
-                    <AssessmentTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
-                    <Button className="buttons-menu">Gráficos</Button>
+                    <InfoTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" onClick={this.GoToInformacoes}/>
+                    <Button className="buttons-menu" onClick={this.GoToInformacoes}>Informações Gerais</Button>
                     <div className="box-perfil" aria-controls="simple-menu" aria-haspopup="true" onMouseOver={this.OpenMenuBar}>E</div>
                     <Menu id="simple-menu" anchorEl={this.state.anchorEl} keepMounted open={Boolean(this.state.anchorEl)} onClose={this.CloseMenuBar}>
                         <div className="user-info">Euax</div>

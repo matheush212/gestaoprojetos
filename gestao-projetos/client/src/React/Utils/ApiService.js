@@ -28,6 +28,7 @@ const ApiService = {
     ControleAtividadeAtiva: (idAtividade, status, token) => ConsomeApi(false, `controle/atividade/ativa/${idAtividade}/${status}/${token}`, 'PUT'),
     ExcluiProjeto: (idProjeto, token) => ConsomeApi(false, `remove/projeto/${idProjeto}/${token}`, 'DELETE'),
     ExcluiAtividade: (idAtividade, token) => ConsomeApi(false, `remove/atividade/${idAtividade}/${token}`, 'DELETE'),
+    Informacoes: (token) => ConsomeApi(false, `get/informacoes/${token}`, 'GET'),
     TrataErros: res => {
         if (!res.ok) {
             throw Error(res.responseText)

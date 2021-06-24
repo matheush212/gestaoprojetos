@@ -81,5 +81,16 @@ class ProjetosController {
             Log.LogError("ProjetosController", "ExcluiProjeto", err.message);
         }
     }
+
+
+    GetInformacoes(res){
+        try {
+            let instaceDAO = new projetosDAO.ProjetosDAO();
+            instaceDAO.SelectInfo(res);
+        }
+        catch (err) {
+            Log.LogError("ProjetosController", "GetInformacoes", err.message);
+        }
+    }
 }
 exports.ProjetosController = ProjetosController;

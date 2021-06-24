@@ -15,8 +15,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import StyleControl from '../../../Functions/ControleCSSBotoes';
 import AccountTreeTwoToneIcon from '@material-ui/icons/AccountTreeTwoTone';
-import HourglassFullTwoToneIcon from '@material-ui/icons/HourglassFullTwoTone';
-import AssessmentTwoToneIcon from '@material-ui/icons/AssessmentTwoTone';
+import InfoTwoToneIcon from '@material-ui/icons/InfoTwoTone';
 import AutenticacaoSession from '../../../Autenticacao/AutenticacaoSession';
 import Log from '../../../Functions/GeraLog';
 let nome = '', descricao = '', dtInicio = '', dtFinal = '';
@@ -166,6 +165,11 @@ class NovoProjeto extends React.Component {
     }
 
 
+    GoToInformacoes = () => {
+        window.location.href = "Informacoes?Ref=" + tokenRef;
+    }
+
+
     Voltar = () => {
         window.location.href = "MeusProjetos?Ref=" + tokenRef;
     }
@@ -185,10 +189,8 @@ class NovoProjeto extends React.Component {
                 <div className="menu-superior">
                     <AccountTreeTwoToneIcon className="icons-menu" color="primary" onClick={this.GoToMeusProjetos} />
                     <Button className="buttons-menu" onClick={this.GoToMeusProjetos}>Meus Projetos</Button>
-                    <HourglassFullTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
-                    <Button className="buttons-menu" >Tempo Gasto Geral</Button>
-                    <AssessmentTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" />
-                    <Button className="buttons-menu">Gráficos</Button>
+                    <InfoTwoToneIcon className="icons-menu" style={{ marginLeft: '1em' }} color="primary" onClick={this.GoToInformacoes}/>
+                    <Button className="buttons-menu" onClick={this.GoToInformacoes}>Informações Gerais</Button>
                     <div className="box-perfil" aria-controls="simple-menu" aria-haspopup="true" onMouseOver={this.OpenMenuBar}>E</div>
                     <Menu id="simple-menu" anchorEl={this.state.anchorEl} keepMounted open={Boolean(this.state.anchorEl)} onClose={this.CloseMenuBar}>
                         <div className="user-info">Euax</div>

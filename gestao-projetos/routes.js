@@ -35,6 +35,14 @@ async function GetRoutes(dirname, app) {
                 instanceController.GetActivityByID(req.params.idAtividade, res);
             }
         });
+
+        app.get("/api/sgp/get/informacoes/:token", (req, res, next) => {
+            if (AuthControl(req.params.token, res)) {
+                let controllerClass = require(dirname + '/client/src/Projetos/ProjetosController');
+                let instanceController = new controllerClass.ProjetosController();
+                instanceController.GetInformacoes(res);
+            }
+        });
     }
     catch (err) {
         log.LogError("routes", "GetRoutes", err.message);

@@ -4,6 +4,10 @@ const GetJSONDataSQL = require('../Functions/GetJSONDataSQL');
 const Log = require("../Functions/GeraLog");
 const CalculaPorcentagem = require("../Functions/CalculaPorcentagem");
 const ATIVO = 1;
+const STATUS_200 = 200;
+const STATUS_400 = 400;
+const STATUS_404 = 404;
+const COD_ERRO = -99;
 
 class AtividadesDAO {
     NewActivity(obj, res) {
@@ -14,9 +18,9 @@ class AtividadesDAO {
 
             instanceDB.run(sql, [], function (err) {
                 if (err)
-                    res.json({ "status": 400, "message": "Não foi possível cadastrar a atividade '" + objUser.login + "'!" });
+                    res.json({ "status": STATUS_400, "message": "Não foi possível cadastrar a atividade '" + objUser.login + "'!" });
                 else
-                    res.json({ "status": 200, "message": "Atividade '" + obj.nome + "' cadastrada com sucesso!" });
+                    res.json({ "status": STATUS_200, "message": "Atividade '" + obj.nome + "' cadastrada com sucesso!" });
             });
         }
         catch (err) {
@@ -34,35 +38,63 @@ class AtividadesDAO {
 
             instanceDB.get(sql, [], (err, rows) => {
                 if (err)
-                    res.json({ "status": 404, "message": err.message });
+                    res.json({ "status": STATUS_404, "message": err.message });
 
                 if (rows != null && rows != "")
                     this.UpdatePercent(idAtividade, rows, CalculaPorcentagem.GetDiferencaEmDias(rows.DtInicio, rows.DtFinal), res);
                 else
-                    res.json({ "status": 400, "message": "Atividade não encontrada!"});
+                    res.json({ "status": STATUS_400, "message": "Atividade não encontrada!" });
             });
         }
         catch (err) {
             Log.LogError("AtividadesDAO", "SelectByID", err.message);
         }
     }
-    
 
-    UpdatePercent(idAtividade, rows, porcentagem, res) {
+
+    UpdatePercent(idAtividade, projectRows, porcentagem, res) {
         try {
 
-            if (Number(porcentagem) == -99)
-                res.json({ "status": 200, "data": rows, "percent": -99 });
+            if (Number(porcentagem) == COD_ERRO)
+                res.json({ "status": STATUS_200, "data": projectRows, "percent": COD_ERRO, "atrasado": COD_ERRO });
             else {
                 let sql = `UPDATE Atividades SET Porcentagem=${porcentagem} WHERE Id=${idAtividade}`;
 
-                instanceDB.run(sql, [], function (err) {
-                    res.json({ "status": 200, "data": rows, "percent": porcentagem });
+                instanceDB.run(sql, [], (err) => {
+                    if (err)
+                        res.json({ "status": STATUS_200, "data": projectRows, "percent": COD_ERRO, "atrasado": COD_ERRO });
+                    else
+                        this.UdateSituacao(idAtividade, projectRows, porcentagem, res);
                 });
             }
         }
         catch (err) {
             Log.LogError("AtividadesDAO", "UpdatePercent", err.message);
+        }
+    }
+
+
+    UdateSituacao(idAtividade, projectRows, porcentagem, res) {
+        try {
+            let atrasado = 0;
+            let dataAtual = new Date();
+            let dataFinalAtividade = new Date(projectRows.DtFinal);
+
+            if (dataAtual > dataFinalAtividade)
+                atrasado = 1;
+            else
+                atrasado = 0;
+
+            let sql = `UPDATE Atividades SET Atrasado=${atrasado} WHERE Id=${idAtividade}`;
+            instanceDB.run(sql, [], function (err) {
+                if (err)
+                    res.json({ "status": STATUS_200, "data": projectRows, "percent": porcentagem, "atrasado": COD_ERRO });
+                else
+                    res.json({ "status": STATUS_200, "data": projectRows, "percent": porcentagem, "atrasado": atrasado });
+            });
+        }
+        catch (err) {
+            Log.LogError("AtividadesDAO", "UdateSituacao", err.message);
         }
     }
 
@@ -124,12 +156,12 @@ class AtividadesDAO {
 
             instanceDB.run(sql, [], function (err) {
                 if (err)
-                    res.json({ "status": 400, "message": err.message });
+                    res.json({ "status": STATUS_400, "message": err.message });
                 else {
                     if (status == ATIVO)
-                        res.json({ "status": 200, "message": "Atividade Reativada com Sucesso!" });
+                        res.json({ "status": STATUS_200, "message": "Atividade Reativada com Sucesso!" });
                     else
-                        res.json({ "status": 200, "message": "Atividade Inativada com Sucesso!" });
+                        res.json({ "status": STATUS_200, "message": "Atividade Inativada com Sucesso!" });
                 }
             });
         }
@@ -146,29 +178,10 @@ class AtividadesDAO {
 
             instanceDB.run(sql, [], (err) => {
                 if (err)
-                    res.json({ "status": 400, "message": err.message });
+                    res.json({ "status": STATUS_400, "message": err.message });
                 else
-                    this.AtualizaPorcentegem(obj.id, CalculaPorcentagem.GetDiferencaEmDias(obj.dtInicio, obj.dtFinal), res);
+                    res.json({ "status": STATUS_200, "message": "Atividade editada com sucesso!" });
             });
-        }
-        catch (err) {
-            Log.LogError("AtividadesDAO", "EditActivity", err.message);
-        }
-    }
-
-
-    AtualizaPorcentegem(idAtividade, porcentagem, res) {
-        try {
-
-            if (Number(porcentagem) == -99)
-                res.json({ "status": 200, "message": "Atividade editada com sucesso!" });
-            else {
-                let sql = `UPDATE Atividades SET Porcentagem=${porcentagem} WHERE Id=${idAtividade}`;
-
-                instanceDB.run(sql, [], function (err) {
-                    res.json({ "status": 200, "message": "Atividade editada com sucesso!" });
-                });
-            }
         }
         catch (err) {
             Log.LogError("AtividadesDAO", "EditActivity", err.message);
@@ -182,9 +195,9 @@ class AtividadesDAO {
 
             instanceDB.run(sql, [], function (err) {
                 if (err)
-                    res.json({ "status": 404, "message": err.message });
+                    res.json({ "status": STATUS_404, "message": err.message });
                 else
-                    res.json({ "status": 200, "message": "Atividade excluída com sucesso!" });
+                    res.json({ "status": STATUS_200, "message": "Atividade excluída com sucesso!" });
             });
         }
         catch (err) {

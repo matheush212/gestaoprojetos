@@ -15,7 +15,3 @@ routes.PutRoutes(__dirname, app);
 routes.DeleteRoutes(__dirname, app);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
-
-//TODO - Pegar DtInicio do primeiro registro da tabela atividade e o DtFinal do ultimo registro e fazer diferença em horas
-//TODO - Criar gráficos
-//TODO - Criar tela de informações/Tempo Geral Gasto?

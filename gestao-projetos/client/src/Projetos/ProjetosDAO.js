@@ -4,6 +4,10 @@ const GetJSONDataSQL = require('../Functions/GetJSONDataSQL');
 const Log = require("../Functions/GeraLog");
 const CalculaPorcentagem = require("../Functions/CalculaPorcentagem");
 const ATIVO = 1;
+const COD_ERRO = -99;
+const STATUS_200 = 200;
+const STATUS_400 = 400;
+const STATUS_404 = 404;
 
 class ProjetosDAO {
     NewProject(obj, res) {
@@ -14,9 +18,9 @@ class ProjetosDAO {
 
             instanceDB.run(sql, [], function (err) {
                 if (err)
-                    res.json({ "status": 400, "message": "Não foi possível cadastrar o projeto '" + objUser.nome + "'!" });
+                    res.json({ "status": STATUS_400, "message": "Não foi possível cadastrar o projeto '" + objUser.nome + "'!" });
                 else
-                    res.json({ "status": 200, "message": "Projeto '" + obj.nome + "' cadastrado com sucesso!" });
+                    res.json({ "status": STATUS_200, "message": "Projeto '" + obj.nome + "' cadastrado com sucesso!" });
             });
         }
         catch (err) {
@@ -31,12 +35,12 @@ class ProjetosDAO {
 
             instanceDB.get(sql, [], (err, rows) => {
                 if (err)
-                    res.json({ "status": 404, "message": err.message });
+                    res.json({ "status": STATUS_404, "message": err.message });
 
                 if (rows != null && rows != "")
                     this.SelectActivities(idProjeto, rows, res);
                 else
-                    res.json({ "status": 400, "message": "Projeto não encontrado!" });
+                    res.json({ "status": STATUS_400, "message": "Projeto não encontrado!" });
             });
         }
         catch (err) {
@@ -47,7 +51,7 @@ class ProjetosDAO {
 
     SelectActivities(idProjeto, projectRows, res) {
         try {
-            let sql = `SELECT Count(Id) as Total, 
+            let sql = `SELECT Count(Id) as Total, Max(DtFinal) as DtFinalAtividade, 
                        (SELECT Count(Id) FROM Atividades WHERE IdProjeto = ${idProjeto} AND Finalizado = 1 AND Ativo = 1) 
                        as Finalizados
                        FROM Atividades 
@@ -55,9 +59,9 @@ class ProjetosDAO {
 
             instanceDB.get(sql, [], (err, rows) => {
                 if (err)
-                    res.json({ "status": 200, "message": "Projeto editado com sucesso!" });
+                    res.json({ "status": STATUS_200, "data": projectRows, "percent": COD_ERRO, "atrasado": COD_ERRO });
                 else
-                    this.UdatePercent(idProjeto, projectRows, CalculaPorcentagem.CalculaPorcentagens(rows.Total, rows.Finalizados), res);
+                    this.UdatePercent(idProjeto, projectRows, CalculaPorcentagem.CalculaPorcentagens(rows.Total, rows.Finalizados), rows.DtFinalAtividade, res);
             });
         }
         catch (err) {
@@ -66,21 +70,48 @@ class ProjetosDAO {
     }
 
 
-    UdatePercent(idProjeto, rows, porcentagem, res) {
+    UdatePercent(idProjeto, projectRows, porcentagem, dtFinalAtividade, res) {
         try {
-
-            if (Number(porcentagem) == -99)
-                res.json({ "status": 200, "data": rows, "percent": -99 });
+            if (Number(porcentagem) == COD_ERRO)
+                res.json({ "status": STATUS_200, "data": projectRows, "percent": COD_ERRO, "atrasado": COD_ERRO });
             else {
                 let sql = `UPDATE Projetos SET Porcentagem=${porcentagem} WHERE Id=${idProjeto}`;
 
-                instanceDB.run(sql, [], function (err) {
-                    res.json({ "status": 200, "data": rows, "percent": porcentagem });
+                instanceDB.run(sql, [], (err) => {
+                    if (err)
+                        res.json({ "status": STATUS_200, "data": projectRows, "percent": COD_ERRO, "atrasado": COD_ERRO });
+                    else
+                        this.UdateSituacao(idProjeto, projectRows, porcentagem, dtFinalAtividade, res);
                 });
             }
         }
         catch (err) {
             Log.LogError("ProjetosDAO", "UdatePercent", err.message);
+        }
+    }
+
+
+    UdateSituacao(idProjeto, projectRows, porcentagem, dtFinalAtividade, res) {
+        try {
+            let atrasado = 0;
+            let maiorDataFinalAtividade = new Date(dtFinalAtividade);
+            let dataFinalProjeto = new Date(projectRows.DtFinal);
+
+            if (maiorDataFinalAtividade > dataFinalProjeto)
+                atrasado = 1;
+            else
+                atrasado = 0;
+
+            let sql = `UPDATE Projetos SET Atrasado=${atrasado} WHERE Id=${idProjeto}`;
+            instanceDB.run(sql, [], function (err) {
+                if (err)
+                    res.json({ "status": STATUS_200, "data": projectRows, "percent": porcentagem, "atrasado": COD_ERRO });
+                else
+                    res.json({ "status": STATUS_200, "data": projectRows, "percent": porcentagem, "atrasado": atrasado });
+            });
+        }
+        catch (err) {
+            Log.LogError("ProjetosDAO", "UdateSituacao", err.message);
         }
     }
 
@@ -138,12 +169,12 @@ class ProjetosDAO {
 
             instanceDB.run(sql, [], function (err) {
                 if (err)
-                    res.json({ "status": 400, "message": err.message });
+                    res.json({ "status": STATUS_400, "message": err.message });
                 else {
                     if (status == ATIVO)
-                        res.json({ "status": 200, "message": "Projeto Reativado com Sucesso!" });
+                        res.json({ "status": STATUS_200, "message": "Projeto Reativado com Sucesso!" });
                     else
-                        res.json({ "status": 200, "message": "Projeto Inativado com Sucesso!" });
+                        res.json({ "status": STATUS_200, "message": "Projeto Inativado com Sucesso!" });
                 }
             });
         }
@@ -160,53 +191,13 @@ class ProjetosDAO {
 
             instanceDB.run(sql, [], (err) => {
                 if (err)
-                    res.json({ "status": 400, "message": err.message });
+                    res.json({ "status": STATUS_400, "message": err.message });
                 else
-                    this.SelectCountAtividades(obj.id, res);
+                    res.json({ "status": STATUS_200, "message": "Projeto editado com sucesso!" });
             });
         }
         catch (err) {
             Log.LogError("ProjetosDAO", "EditProject", err.message);
-        }
-    }
-
-
-    SelectCountAtividades(idProjeto, res) {
-        try {
-            let sql = `SELECT Count(Id) as Total, 
-                       (SELECT Count(Id) FROM Atividades WHERE IdProjeto = ${idProjeto} AND Finalizado = 1 AND Ativo = 1) 
-                       as Finalizados
-                       FROM Atividades 
-                       WHERE IdProjeto = ${idProjeto} AND Ativo = 1`;
-
-            instanceDB.get(sql, [], (err, rows) => {
-                if (err)
-                    res.json({ "status": 200, "message": "Projeto editado com sucesso!" });
-                else
-                    this.AtualizaPorcentegem(idProjeto, CalculaPorcentagem.CalculaPorcentagens(rows.Total, rows.Finalizados), res);
-            });
-        }
-        catch (err) {
-            Log.LogError("ProjetosDAO", "SelectCountAtividades", err.message);
-        }
-    }
-
-
-    AtualizaPorcentegem(idProjeto, porcentagem, res) {
-        try {
-
-            if (Number(porcentagem) == -99)
-                res.json({ "status": 200, "message": "Projeto editado com sucesso!" });
-            else {
-                let sql = `UPDATE Projetos SET Porcentagem=${porcentagem} WHERE Id=${idProjeto}`;
-
-                instanceDB.run(sql, [], function (err) {
-                    res.json({ "status": 200, "message": "Projeto editado com sucesso!" });
-                });
-            }
-        }
-        catch (err) {
-            Log.LogError("ProjetosDAO", "AtualizaPorcentegem", err.message);
         }
     }
 
@@ -217,7 +208,7 @@ class ProjetosDAO {
 
             instanceDB.run(sql, [], (err) => {
                 if (err)
-                    res.json({ "status": 404, "message": err.message });
+                    res.json({ "status": STATUS_404, "message": err.message });
                 else
                     this.RemoveProjeto(idProjeto, res);
             });
@@ -234,9 +225,9 @@ class ProjetosDAO {
 
             instanceDB.run(sql, [], function (err) {
                 if (err)
-                    res.json({ "status": 404, "message": err.message });
+                    res.json({ "status": STATUS_404, "message": err.message });
                 else
-                    res.json({ "status": 200, "message": "Projeto excluído com sucesso!" });
+                    res.json({ "status": STATUS_200, "message": "Projeto excluído com sucesso!" });
             });
         }
         catch (err) {
@@ -244,5 +235,50 @@ class ProjetosDAO {
         }
     }
 
+
+    SelectInfo(res) {
+        try {
+            let sql = `SELECT
+                       (SELECT COUNT(Id) FROM Projetos WHERE Ativo = 1) as TotalProjetos,
+                       (SELECT COUNT(Id) FROM Atividades WHERE Ativo = 1) as TotalAtividades,
+                       (SELECT COUNT(Id) FROM Projetos WHERE Finalizado = 1 AND Ativo = 1) as ProjetosConcluidos, 
+                       (SELECT COUNT(Id) FROM Projetos WHERE Finalizado = 0 AND Ativo = 1) as ProjetosEmAndamento,
+                       (SELECT COUNT(Id) FROM Atividades WHERE Finalizado = 1 AND Ativo = 1) as AtividadesConcluidas,
+                       (SELECT COUNT(Id) FROM Atividades WHERE Finalizado = 0 AND Ativo = 1) as AtividadesEmAndamento,
+                       (SELECT COUNT(Id) FROM Projetos WHERE Atrasado = 1 AND Finalizado = 0 AND Ativo = 1) as ProjetosAtrasados,
+                       (SELECT COUNT(Id) FROM Atividades WHERE Atrasado = 1 AND Finalizado = 0 AND Ativo = 1) as AtividadesAtrasadas,
+                       (SELECT Min(DtInicio) FROM Atividades WHERE Ativo = 1) as DtInicialAtividades,
+                       (SELECT Max(DtFinal) FROM Atividades WHERE Ativo = 1) as DtFinalMaximaAtividades
+                       FROM Projetos Limit 1`;
+
+            instanceDB.all(sql, [], (err, rows) => {
+                if (err)
+                    res.json({ "status": STATUS_404, "message": err.message });
+
+                if (rows != null && rows != "")
+                    this.CalculaHorasTrabalhadas(rows, res);
+                else
+                    res.json({ "status": STATUS_400, "message": "Informações não encontradas!" });
+            });
+        }
+        catch (err) {
+            Log.LogError("ProjetosDAO", "SelectInfo", err.message);
+        }
+    }
+
+
+    CalculaHorasTrabalhadas(rows, res) {
+        try {
+            let dtInicio = new Date(rows[0].DtInicialAtividades);
+            let dtFinal = new Date(rows[0].DtFinalMaximaAtividades);
+            let hours = Math.abs(dtFinal - dtInicio) / 36e5;
+            res.json({ "status": STATUS_200, "message": 'Informações carregadas com sucesso', "data": rows, "hours": hours });
+
+        }
+        catch (err) {
+            Log.LogError("ProjetosDAO", "CalculaHorasTrabalhadas", err.message);
+            res.json({ "status": STATUS_404, "message": err.message });
+        }
+    }
 }
 exports.ProjetosDAO = ProjetosDAO;
