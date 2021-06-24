@@ -148,8 +148,6 @@ class ProjetosDAO {
                         sql += `${filters[i].key} ${filters[i].operator} '${filters[i].value}'`;
                 }
 
-                console.log(sql);
-
                 instanceDB.all(sql, [], (err, rows) => {
                     res.json(GetJSONDataSQL.ReturnDataJSON(err, rows, "Projeto(s)"));
                 });

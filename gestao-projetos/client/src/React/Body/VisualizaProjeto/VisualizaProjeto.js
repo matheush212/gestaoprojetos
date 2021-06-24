@@ -70,7 +70,6 @@ class VisualizaProjeto extends React.Component {
 
 
     PreencheDadosProjeto = (dados, percent, atrasado) => {
-        console.log(percent, atrasado);
         document.getElementById("NomeProjetoEdit").value = dados.Nome;
         document.getElementById("DescProjetoEdit").value = dados.Descricao;
         document.getElementById("DtInicioProjetoEdit").value = dados.DtInicio;

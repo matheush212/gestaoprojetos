@@ -12,7 +12,7 @@
 
 OBS: O sistema detém um login e senha, sendo assim, informe o login 'euax' e senha 'euax' para acessar.
 
-CASO NÃO CONSEGUIR RODAR A APLICAÇÃO, FAVOR VISUALIZAR O VÍDEO TUTORIAL DISPONÍVEL NA PASTA! (Tutorial Instalação)
+CASO NÃO CONSEGUIR RODAR A APLICAÇÃO, FAVOR VISUALIZAR TUTORIAL docx DISPONÍVEL NA PASTA! (Tutorial_Instalação.docx)
 # ------------------------------------------------------------------------------------------------- #
 
 
