@@ -1,4 +1,4 @@
-# -------------------------------------- Inicializar projeto --------------------------------------#
+# Inicializar projeto
 
 1 - Para Iniciar o projeto, abra o prompt de comando do nodejs, navegue até a pasta 'gestao-projetos' que está no mesmo diretório que este arquivo README;
 
@@ -13,11 +13,10 @@
 OBS: O sistema detém um login e senha, sendo assim, informe o login 'euax' e senha 'euax' para acessar.
 
 CASO NÃO CONSEGUIR RODAR A APLICAÇÃO, FAVOR VISUALIZAR TUTORIAL docx DISPONÍVEL NA PASTA! (Tutorial_Instalação.docx)
-# ------------------------------------------------------------------------------------------------- #
 
 
 
-# ------------------------------- Ferramentas e tecnolgia utilizadas ------------------------------ #
+# Ferramentas e tecnolgia utilizadas
 
 Esta aplicação foi criada com as linguagens ReactJS, NodeJS, CSS, Materialize-CSS, Material-UI, JQuery, Javascript e HTML, sendo que para a parte server-side foi uilizado o NodeJS.
 
@@ -31,10 +30,8 @@ Trabalho com ReactJS e NodeJS a mais de 2 anos, desenvolvendo aplicações desde
 
 OBS: O arquivo.db (sqpDB.db), referente ao banco de dados, está na pasta 'db/database' dentro de 'gestao-projetos' e pode ser acessado via o SQLiteStudio (https://sqlitestudio.pl/).
 
-# ------------------------------------------------------------------------------------------------- #
 
-
-# ---------------------------------- Funcionalidade implementadas --------------------------------- #
+# Funcionalidade implementadas 
 
 OBS: Para verificar melhor e com mais detalhes o que cada tela tem de funcionalidades, favor consultar o arquivo 'Manual_SGP.docx' disponível na pasta. Nele contém uma imagem de cada tela e a descrição das funcionalidades.
 
@@ -69,14 +66,9 @@ Foram implementadas as seguintes funcionalidades e telas:
 - Foram criadas 3 tabelas, sendo elas, a tabela de Usuários, de Projetos e de Atividades. As tabelas de Projetos e Atividades contém todos os campos necessários e descritos no problema do projeto e alguns a mais criados para outras funcionalidades.
 
 Avaliando de modo geral, todas as funcionalidades e regras descritas no problema do projeto foram implementadas e estão funcionando corretamente. Sendo que as funções de edição, exclusão, inativação, informações gerais, alteração de senha e alteração de perfil foram implementadas a parte.
-# ------------------------------------------------------------------------------------------------- #
 
-
-# ------------------------------------------------------------------------------------------------- #
 
 Obrigado!
 
 Atenciosamente,
 Matheus Henrique Horongoso.
-
-# ------------------------------------------------------------------------------------------------- #
