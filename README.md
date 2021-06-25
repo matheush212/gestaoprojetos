@@ -31,7 +31,7 @@ Trabalho com ReactJS e NodeJS a mais de 2 anos, desenvolvendo aplicações desde
 OBS: O arquivo.db (sqpDB.db), referente ao banco de dados, está na pasta 'db/database' dentro de 'gestao-projetos' e pode ser acessado via o SQLiteStudio (https://sqlitestudio.pl/).
 
 
-# Funcionalidade implementadas 
+# Funcionalidades implementadas 
 
 OBS: Para verificar melhor e com mais detalhes o que cada tela tem de funcionalidades, favor consultar o arquivo 'Manual_SGP.docx' disponível na pasta. Nele contém uma imagem de cada tela e a descrição das funcionalidades.
 
