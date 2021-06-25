@@ -11,7 +11,7 @@ import ShowPassword from '../../../Functions/ShowPassword';
 import UrlParam from '../../../Functions/GetUrlParameters';
 import Log from '../../../Functions/GeraLog';
 import StyleControl from '../../../Functions/ControleCSSBotoes';
-import DestroySession from '../../../Functions/DestroySession';
+import DestroySession from '../../Utils/DestroySession';
 import AutenticacaoSession from '../../../Autenticacao/AutenticacaoSession';
 let idUsuario = "";
 let tokenRef = UrlParam.queryString("Ref");

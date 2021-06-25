@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import ApiService from '../../Utils/ApiService';
 import PopUp from '../../Utils/PopUp';
 import UrlParam from '../../../Functions/GetUrlParameters';
-import DestroySession from '../../../Functions/DestroySession';
+import DestroySession from '../../Utils/DestroySession';
 import Log from '../../../Functions/GeraLog';
 import StyleControl from '../../../Functions/ControleCSSBotoes';
 import AutenticacaoSession from '../../../Autenticacao/AutenticacaoSession';

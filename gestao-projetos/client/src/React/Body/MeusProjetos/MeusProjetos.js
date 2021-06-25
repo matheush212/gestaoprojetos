@@ -17,7 +17,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
 import InfoTwoToneIcon from '@material-ui/icons/InfoTwoTone';
 import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
-import DestroySession from '../../../Functions/DestroySession';
+import DestroySession from '../../Utils/DestroySession';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
