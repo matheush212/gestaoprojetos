@@ -1,0 +1,4 @@
+25/06/2021 16:41:03 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
+25/06/2021 16:41:03 -> Tela: AutenticacaoSession - Função: Authorize - Erro: Cannot read property '0' of undefined
+
